@@ -6,13 +6,16 @@
 .poker-card{height:73.5px;background:#fff;padding:0;border-color:#d4ccba;color:#171b1a}
 .poker-card.red{color:#bd111b}
 .poker-card .card-art{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit;pointer-events:none;user-select:none}
-.poker-card .corner{position:absolute;left:2.5px;top:3px;min-width:15px;align-items:center;line-height:13px;font-size:12px;background:#fff;border-radius:1px;pointer-events:none}
+/* 叠牌露出的窄栏仅显示一组角标，完整牌面保留在末张、展开区和桌面出牌。 */
+.hand-fan .card-art{clip-path:inset(0 0 0 calc(var(--hand-exposed) - 1px))}
+.hand-fan .poker-card:last-child .card-art{clip-path:none}
+.poker-card .corner{position:absolute;left:0;top:0;width:17.5px;min-width:17.5px;padding:3px 0 1px 2.5px;align-items:center;line-height:13px;font-size:12px;background:#fff;border-radius:1px;pointer-events:none}
 .poker-card .corner .suit{font-size:12px;line-height:12px}
 .poker-card.joker .corner{font-family:var(--serif);font-size:11px;line-height:14px}
 .poker-card.joker .corner .suit{font-size:11px;line-height:12px}
 .poker-card.selected:after{content:'';position:absolute;inset:0;border:1.5px solid #d8af4e;border-radius:inherit;pointer-events:none;z-index:2}
 .played-card{height:50.4px}
-.played-card .corner{left:1px;top:2px;min-width:11px;font-size:9px;line-height:10px}
+.played-card .corner{left:0;top:0;width:12px;min-width:12px;padding:2px 0 1px 1px;font-size:9px;line-height:10px}
 .played-card .corner .suit{font-size:9px;line-height:9px}
 .played-card.joker .corner{font-size:8px;line-height:10px}
 .played-card.joker .corner .suit{font-size:8px;line-height:9px}
@@ -23,7 +26,7 @@
 .expanded-grid .poker-card{width:49px;height:68.6px;padding:0;justify-self:center}
 .expanded-footer{margin-top:8px}
 .mini-bottom-cards .poker-card{height:32.2px;padding:0}
-.mini-bottom-cards .corner{left:1px;top:1px;min-width:8px;font-size:7px;line-height:8px}
+.mini-bottom-cards .corner{left:0;top:0;width:9px;min-width:9px;padding:1px 0 0 1px;font-size:7px;line-height:8px}
 .mini-bottom-cards .corner .suit{font-size:7px;line-height:7px}
 .mini-bottom-cards .joker .corner{font-size:6px;line-height:8px}
 .mini-bottom-cards .joker .corner .suit{font-size:6px;line-height:7px}

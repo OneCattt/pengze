@@ -71,6 +71,7 @@
 | `verification/results/visual-report.json` | 与Figma截图六处无遮挡桌布采样的颜色对照 |
 | `verification/results/figma-vs-html.png` | Figma叫分画面与HTML叫分画面的并排对照 |
 | `verification/results/card-upgrade-comparison.png` | 牌面升级前后的小屏33张展开手牌对照 |
+| `verification/results/card-corner-fixes.png` | 原始小角标残影、重叠手牌多余花色的修复前后对照 |
 | `verification/results/*.png` | 手机横屏、小屏、桌面、竖屏、扣底动画、甩错与结算截图 |
 
 浏览器验证基于本机Chromium与file协议，包括真人实际叫205分成为庄家、收底、定主、扣底、触发托管、所有手牌出完、结算和下一局。另有一次真实等待20秒的超时测试。计时提前触发的测试入口只位于验证API，不改变正常操作期限。

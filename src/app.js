@@ -118,7 +118,7 @@
     const step = Math.min(25.5, (644 - 52.5) / Math.max(1, cards.length - 1));
     const width = (cards.length - 1) * step + 52.5;
     const html = cards.map((card, index) => cardHTML(card, { interactive: true, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
-    return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
+    return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px;--hand-exposed:${step}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
   }
 
   function renderTrick() {

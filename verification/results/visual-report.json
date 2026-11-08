@@ -104,5 +104,17 @@
       "maxChannelDifference": 1
     }
   ],
-  "scope": "仅核对六个无遮挡桌布位置的颜色；布局、字体、操作条、选牌、结算和适配另行人工看图检查，不代表整页像素一致。"
+  "handCornerChecks": [
+    {
+      "cards": 25,
+      "sampledPixels": 600,
+      "status": "passed"
+    },
+    {
+      "cards": 33,
+      "sampledPixels": 800,
+      "status": "passed"
+    }
+  ],
+  "scope": "核对六处桌布颜色及25/33张重叠手牌角标栏的多余图案；布局、字体和适配另行看图检查，不代表整页像素一致。"
 }

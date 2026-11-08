@@ -12,22 +12,15 @@
 #viewport{display:flex;align-items:center;justify-content:center}.board{background:radial-gradient(ellipse 72.14% 72.14% at 50% 48%,#117051 0%,#07503b 55%,#042b22 100%)}.home-board{background:radial-gradient(circle farthest-corner at center,#14694d 0%,#073e30 56%,#031f19 100%)}.bidding-controls{width:405px}
 @media (orientation:portrait) and (max-width:700px){.portrait-guide{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at center,#0b5942,#042b22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;color:#d8b56a}.portrait-guide strong{font:700 24px var(--serif)}.portrait-guide>span:last-child{font-size:13px;color:#99b2a3}.rotate-symbol{font-size:90px;transform:rotate(-90deg);font-family:Georgia,serif}#viewport{visibility:hidden}}
 /* 牌面沿用原始5:7比例；独立角标保证手机重叠手牌的点数和花色可读。 */
-.poker-card{height:73.5px;background:#fff;padding:0;border-color:#d4ccba;color:#171b1a}
+.poker-card{appearance:none;height:73.5px;background:#fff;padding:0;border-color:#d4ccba;color:#171b1a}
 .poker-card.red{color:#bd111b}
 .poker-card .card-art{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit;pointer-events:none;user-select:none}
-/* 叠牌露出的窄栏仅显示一组角标，完整牌面保留在末张、展开区和桌面出牌。 */
-.hand-fan .card-art{clip-path:inset(0 0 0 calc(var(--hand-exposed) - 1px))}
-.hand-fan .poker-card:last-child .card-art{clip-path:none}
 .poker-card .corner{position:absolute;left:0;top:0;width:17.5px;min-width:17.5px;padding:3px 0 1px 2.5px;align-items:center;line-height:13px;font-size:12px;background:#fff;border-radius:1px;pointer-events:none}
 .poker-card .corner .suit{font-size:12px;line-height:12px}
 .poker-card.joker .corner{font-family:var(--serif);font-size:11px;line-height:14px}
 .poker-card.joker .corner .suit{font-size:11px;line-height:12px}
 .poker-card.selected:after{content:'';position:absolute;inset:0;border:1.5px solid #d8af4e;border-radius:inherit;pointer-events:none;z-index:2}
 .played-card{height:50.4px}
-.played-card .corner{left:0;top:0;width:12px;min-width:12px;padding:2px 0 1px 1px;font-size:9px;line-height:10px}
-.played-card .corner .suit{font-size:9px;line-height:9px}
-.played-card.joker .corner{font-size:8px;line-height:10px}
-.played-card.joker .corner .suit{font-size:8px;line-height:9px}
 .bury-card{height:73.5px}
 .expanded-panel{height:356px}
 .expanded-top{margin-bottom:10px}
@@ -35,10 +28,6 @@
 .expanded-grid .poker-card{width:49px;height:68.6px;padding:0;justify-self:center}
 .expanded-footer{margin-top:8px}
 .mini-bottom-cards .poker-card{height:32.2px;padding:0}
-.mini-bottom-cards .corner{left:0;top:0;width:9px;min-width:9px;padding:1px 0 0 1px;font-size:7px;line-height:8px}
-.mini-bottom-cards .corner .suit{font-size:7px;line-height:7px}
-.mini-bottom-cards .joker .corner{font-size:6px;line-height:8px}
-.mini-bottom-cards .joker .corner .suit{font-size:6px;line-height:7px}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 </style>
 </head>
@@ -614,8 +603,13 @@ const PENGZE_CARD_ART = {"S2":"data:image/webp;base64,UklGRi4KAABXRUJQVlA4WAoAAA
     const rank = Rules.RANK_NAMES[card.rank] || card.rank;
     const suit = joker ? '王' : Rules.SUIT_SYMBOLS[card.suit];
     const face = `${card.suit}${card.rank}`;
+    // 紧凑角标和完整图片分别渲染，避免遮住或重复显示原始牌面图案。
+    const compact = Boolean(options.compact);
+    const content = compact
+      ? `<span class="corner" aria-hidden="true"><span>${rank}</span><span class="suit">${suit}</span></span>`
+      : `<img class="card-art" src="${PENGZE_CARD_ART[face]}" width="240" height="336" alt="" aria-hidden="true" draggable="false">`;
     const active = options.interactive;
-    return `<${active ? 'button' : 'div'} class="poker-card ${red ? 'red' : ''} ${joker ? 'joker' : ''} ${options.small ? 'played-card' : ''} ${options.selected ? 'selected' : ''}" data-face="${face}" ${active ? `type="button" data-action="card" data-card="${card.id}" aria-label="${Rules.name(card)}" aria-pressed="${Boolean(options.selected)}"` : `aria-label="${Rules.name(card)}"`} ${options.style ? `style="${options.style}"` : ''}><img class="card-art" src="${PENGZE_CARD_ART[face]}" width="240" height="336" alt="" aria-hidden="true" draggable="false"><span class="corner" aria-hidden="true"><span>${rank}</span><span class="suit">${suit}</span></span></${active ? 'button' : 'div'}>`;
+    return `<${active ? 'button' : 'div'} class="poker-card ${red ? 'red' : ''} ${joker ? 'joker' : ''} ${options.small ? 'played-card' : ''} ${options.selected ? 'selected' : ''}" data-face="${face}" ${active ? `type="button" data-action="card" data-card="${card.id}" aria-label="${Rules.name(card)}" aria-pressed="${Boolean(options.selected)}"` : `aria-label="${Rules.name(card)}"`} ${options.style ? `style="${options.style}"` : ''}>${content}</${active ? 'button' : 'div'}>`;
   }
 
   function countdownHTML() {
@@ -663,8 +657,8 @@ const PENGZE_CARD_ART = {"S2":"data:image/webp;base64,UklGRi4KAABXRUJQVlA4WAoAAA
     const cards = handCards();
     const step = Math.min(25.5, (644 - 52.5) / Math.max(1, cards.length - 1));
     const width = (cards.length - 1) * step + 52.5;
-    const html = cards.map((card, index) => cardHTML(card, { interactive: true, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
-    return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px;--hand-exposed:${step}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
+    const html = cards.map((card, index) => cardHTML(card, { interactive: true, compact: index < cards.length - 1, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
+    return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
   }
 
   function renderTrick() {

@@ -66,9 +66,12 @@ async function run() {
     const visibleCorners = await page.locator('.hand-fan [data-card]').evaluateAll(elements => elements.every((element, index) => {
       const card = window.PengzeValidation.game.hands[0].find(card => card.id === element.dataset.card);
       const image = element.querySelector('.card-art');
-      const corner = element.querySelector('.corner').getBoundingClientRect();
+      const cornerElement = element.querySelector('.corner');
+      if (element.dataset.face !== `${card.suit}${card.rank}`) return false;
+      if (index === elements.length - 1) return !cornerElement && image?.src === PENGZE_CARD_ART[element.dataset.face] && getComputedStyle(image).pointerEvents === 'none';
+      const corner = cornerElement.getBoundingClientRect();
       const edge = elements[index + 1]?.getBoundingClientRect().left ?? element.getBoundingClientRect().right;
-      return element.dataset.face === `${card.suit}${card.rank}` && image.src === PENGZE_CARD_ART[element.dataset.face] && corner.right <= edge + .5 && getComputedStyle(image).pointerEvents === 'none';
+      return !image && corner.right <= edge + .5 && cornerElement.textContent === `${window.PengzeRules.RANK_NAMES[card.rank] || card.rank}${card.suit === 'J' ? '王' : window.PengzeRules.SUIT_SYMBOLS[card.suit]}`;
     }));
     assert.ok(visibleCorners, '33张手牌的角标完整露出且牌面映射正确');
     checks.push('33张手牌牌面对应实际卡牌，重叠角标完整可见，图片不拦截选牌');
@@ -89,6 +92,8 @@ async function run() {
     await page.locator('[data-action="bury"]').click();
     assert.equal(await page.evaluate(() => window.PengzeValidation.game.phase), 'burying');
     assert.equal(await page.locator('.bury-card').count(), 8);
+    assert.equal(await page.locator('.bury-card .card-art').count(), 8);
+    assert.equal(await page.locator('.bury-card .corner').count(), 0);
     assert.equal(await page.evaluate(() => window.PengzeValidation.timerCount), 0);
     await page.waitForTimeout(280);
     await page.screenshot({ path: path.join(output, 'bury-animation-844.png') });
@@ -102,6 +107,8 @@ async function run() {
     await page.evaluate(() => window.PengzeValidation.scenario('throwPair', true));
     await page.locator('[data-action="play"]').click();
     await page.waitForFunction(() => document.querySelectorAll('.play-zone-0 .poker-card').length === 2);
+    assert.equal(await page.locator('.play-zone-0 .card-art').count(), 2);
+    assert.equal(await page.locator('.play-zone-0 .corner').count(), 0);
     assert.deepEqual(await page.evaluate(() => ({ count: window.PengzeValidation.game.hands[0].length, penalty: window.PengzeValidation.game.penalty, actual: window.PengzeValidation.game.actual })), { count: 23, penalty: 20, actual: 0 });
     await page.screenshot({ path: path.join(output, 'throw-failure-844.png') });
     checks.push('甩错对子只实际出2张、扣20分，另外两张保留');
@@ -122,6 +129,8 @@ async function run() {
     assert.ok(rows[0].includes('−30') && rows[0].includes('+15') && rows[0].includes('−15元'));
     assert.ok(rows[1].includes('+10') && rows[1].includes('−15') && rows[1].includes('−5元'));
     assert.equal(await page.locator('.mini-bottom-cards .poker-card').count(), 8);
+    assert.equal(await page.locator('.mini-bottom-cards .card-art').count(), 8);
+    assert.equal(await page.locator('.mini-bottom-cards .corner').count(), 0);
     await page.screenshot({ path: path.join(output, 'result-details-844.png') });
     checks.push('结算明细使用文档样本，分清游戏分、正常金额和额外转账');
 

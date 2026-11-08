@@ -68,8 +68,13 @@
     const rank = Rules.RANK_NAMES[card.rank] || card.rank;
     const suit = joker ? '王' : Rules.SUIT_SYMBOLS[card.suit];
     const face = `${card.suit}${card.rank}`;
+    // 紧凑角标和完整图片分别渲染，避免遮住或重复显示原始牌面图案。
+    const compact = Boolean(options.compact);
+    const content = compact
+      ? `<span class="corner" aria-hidden="true"><span>${rank}</span><span class="suit">${suit}</span></span>`
+      : `<img class="card-art" src="${PENGZE_CARD_ART[face]}" width="240" height="336" alt="" aria-hidden="true" draggable="false">`;
     const active = options.interactive;
-    return `<${active ? 'button' : 'div'} class="poker-card ${red ? 'red' : ''} ${joker ? 'joker' : ''} ${options.small ? 'played-card' : ''} ${options.selected ? 'selected' : ''}" data-face="${face}" ${active ? `type="button" data-action="card" data-card="${card.id}" aria-label="${Rules.name(card)}" aria-pressed="${Boolean(options.selected)}"` : `aria-label="${Rules.name(card)}"`} ${options.style ? `style="${options.style}"` : ''}><img class="card-art" src="${PENGZE_CARD_ART[face]}" width="240" height="336" alt="" aria-hidden="true" draggable="false"><span class="corner" aria-hidden="true"><span>${rank}</span><span class="suit">${suit}</span></span></${active ? 'button' : 'div'}>`;
+    return `<${active ? 'button' : 'div'} class="poker-card ${red ? 'red' : ''} ${joker ? 'joker' : ''} ${options.small ? 'played-card' : ''} ${options.selected ? 'selected' : ''}" data-face="${face}" ${active ? `type="button" data-action="card" data-card="${card.id}" aria-label="${Rules.name(card)}" aria-pressed="${Boolean(options.selected)}"` : `aria-label="${Rules.name(card)}"`} ${options.style ? `style="${options.style}"` : ''}>${content}</${active ? 'button' : 'div'}>`;
   }
 
   function countdownHTML() {
@@ -117,8 +122,8 @@
     const cards = handCards();
     const step = Math.min(25.5, (644 - 52.5) / Math.max(1, cards.length - 1));
     const width = (cards.length - 1) * step + 52.5;
-    const html = cards.map((card, index) => cardHTML(card, { interactive: true, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
-    return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px;--hand-exposed:${step}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
+    const html = cards.map((card, index) => cardHTML(card, { interactive: true, compact: index < cards.length - 1, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
+    return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
   }
 
   function renderTrick() {

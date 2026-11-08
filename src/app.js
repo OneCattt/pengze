@@ -67,8 +67,9 @@
     const joker = card.suit === 'J';
     const rank = Rules.RANK_NAMES[card.rank] || card.rank;
     const suit = joker ? '王' : Rules.SUIT_SYMBOLS[card.suit];
+    const face = `${card.suit}${card.rank}`;
     const active = options.interactive;
-    return `<${active ? 'button' : 'div'} class="poker-card ${red ? 'red' : ''} ${joker ? 'joker' : ''} ${options.small ? 'played-card' : ''} ${options.selected ? 'selected' : ''}" ${active ? `type="button" data-action="card" data-card="${card.id}" aria-label="${Rules.name(card)}" aria-pressed="${Boolean(options.selected)}"` : `aria-label="${Rules.name(card)}"`} ${options.style ? `style="${options.style}"` : ''}><span class="corner"><span>${rank}</span><span class="suit">${suit}</span></span><span class="center-suit">${joker ? `${rank}王` : suit}</span></${active ? 'button' : 'div'}>`;
+    return `<${active ? 'button' : 'div'} class="poker-card ${red ? 'red' : ''} ${joker ? 'joker' : ''} ${options.small ? 'played-card' : ''} ${options.selected ? 'selected' : ''}" data-face="${face}" ${active ? `type="button" data-action="card" data-card="${card.id}" aria-label="${Rules.name(card)}" aria-pressed="${Boolean(options.selected)}"` : `aria-label="${Rules.name(card)}"`} ${options.style ? `style="${options.style}"` : ''}><img class="card-art" src="${PENGZE_CARD_ART[face]}" width="240" height="336" alt="" aria-hidden="true" draggable="false"><span class="corner" aria-hidden="true"><span>${rank}</span><span class="suit">${suit}</span></span></${active ? 'button' : 'div'}>`;
   }
 
   function countdownHTML() {

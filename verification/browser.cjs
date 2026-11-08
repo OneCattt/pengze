@@ -27,6 +27,30 @@ async function run() {
     assert.ok(await page.evaluate(() => document.fonts.check('16px "Pengze Serif"')));
     checks.push('file协议直接打开，首页及内嵌字体正常');
 
+    const manifest = JSON.parse(fs.readFileSync(path.join(root, 'assets/cards/manifest.json')));
+    const decodedFaces = await page.evaluate(async () => {
+      return Promise.all(Object.entries(PENGZE_CARD_ART).map(async ([key, src]) => {
+        const image = new Image();
+        image.src = src;
+        await image.decode();
+        return { key, width: image.naturalWidth, height: image.naturalHeight, src };
+      }));
+    });
+    assert.equal(decodedFaces.length, 54);
+    for (const face of decodedFaces) {
+      const expected = manifest.cards[face.key];
+      assert.ok(expected, `未登记牌面${face.key}`);
+      assert.equal(face.width, 240);
+      assert.equal(face.height, 336);
+      assert.equal(face.src, `data:image/webp;base64,${fs.readFileSync(path.join(root, 'assets/cards', expected.file)).toString('base64')}`);
+    }
+    const identity = await page.evaluate(() => {
+      const cards = window.PengzeRules.deck();
+      return { ids: new Set(cards.map(card => card.id)).size, faces: new Set(cards.map(card => PENGZE_CARD_ART[`${card.suit}${card.rank}`])).size, missing: cards.some(card => !PENGZE_CARD_ART[`${card.suit}${card.rank}`]) };
+    });
+    assert.deepEqual(identity, { ids: 108, faces: 54, missing: false });
+    checks.push('54种内嵌牌面全部可解码、尺寸与文件正确，108张实体牌保留独立身份');
+
     for (const scene of ['bid', 'trump', 'bury', 'result', 'allpass', 'ai']) {
       await page.goto(`${url}?review=${scene}`);
       await page.evaluate(() => document.fonts.ready);
@@ -39,6 +63,15 @@ async function run() {
     assert.equal(await page.locator('.hand-fan .poker-card').count(), 33);
     assert.equal(await page.locator('.hand-fan .selected').count(), 3);
     assert.equal(await page.locator('[data-action="bury"]').isDisabled(), true);
+    const visibleCorners = await page.locator('.hand-fan [data-card]').evaluateAll(elements => elements.every((element, index) => {
+      const card = window.PengzeValidation.game.hands[0].find(card => card.id === element.dataset.card);
+      const image = element.querySelector('.card-art');
+      const corner = element.querySelector('.corner').getBoundingClientRect();
+      const edge = elements[index + 1]?.getBoundingClientRect().left ?? element.getBoundingClientRect().right;
+      return element.dataset.face === `${card.suit}${card.rank}` && image.src === PENGZE_CARD_ART[element.dataset.face] && corner.right <= edge + .5 && getComputedStyle(image).pointerEvents === 'none';
+    }));
+    assert.ok(visibleCorners, '33张手牌的角标完整露出且牌面映射正确');
+    checks.push('33张手牌牌面对应实际卡牌，重叠角标完整可见，图片不拦截选牌');
     await page.locator('.hand-fan .selected').first().click({ position: { x: 6, y: 6 } });
     assert.equal(await page.locator('.hand-fan .selected').count(), 2);
     await page.evaluate(() => {

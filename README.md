@@ -22,6 +22,18 @@
 - 延续原型的绿色渐变、细金边、四方座位、中央徽记、底部牌扇、金色主按钮、深绿操作条及结算面板。
 - 使用内嵌的Noto Serif SC、Noto Sans SC，不依赖临时Figma资产链接或在线字体。
 
+## 传统扑克牌面升级
+
+采用 [Public Domain and CC0 Playing Cards](https://github.com/AustinGabriel/Public-Domain-and-CC0-Playing-Cards) 的完整54种传统牌面：52张普通牌、黑色小王和红色大王。固定来源版本、CC0许可、原始SVG及图片指纹保存在 `assets/cards/`。
+
+- 按原始5:7比例导出240×336 WebP，总计约521KB，相比原始SVG减少约91.5%。构建后的独立HTML约1.12MB。
+- 手牌、展开手牌、出牌、扣底翻面及结算底牌使用同一套图片；原有绿色“彭”字牌背继续保留。
+- 重叠手牌叠加清晰的点数、花色和大小王角标，选中时抬起并显示金边。展开区域支持完整查看33张牌。
+- 两副牌复用54种图像，108张实体牌ID保持独立。图片仅参与展示，游戏规则实现没有变化。
+- 图片全部内嵌，无需联网。当前仍属于本地HTML验证，微信小游戏的资源打包与真机表现待正式工程验证。
+
+素材授权和重新导出方法见 [`assets/cards/README.md`](assets/cards/README.md)。
+
 原型中的示意牌不直接用作牌局数据。例如S10选中大小王却标注“对子”，验证稿依据规则纠正：只有两张同花色、同点数的牌才是对子。所有实际手牌来自唯一的108张实体牌，不能复制示意牌凑数量。桌面底牌显示真实8张牌背，AI收底与扣底不泄露牌面。
 
 ## 已接入真实逻辑
@@ -58,6 +70,7 @@
 | `verification/results/browser-report.json` | 实际HTML产物SHA256、浏览器交互与真实20秒超时检查 |
 | `verification/results/visual-report.json` | 与Figma截图六处无遮挡桌布采样的颜色对照 |
 | `verification/results/figma-vs-html.png` | Figma叫分画面与HTML叫分画面的并排对照 |
+| `verification/results/card-upgrade-comparison.png` | 牌面升级前后的小屏33张展开手牌对照 |
 | `verification/results/*.png` | 手机横屏、小屏、桌面、竖屏、扣底动画、甩错与结算截图 |
 
 浏览器验证基于本机Chromium与file协议，包括真人实际叫205分成为庄家、收底、定主、扣底、触发托管、所有手牌出完、结算和下一局。另有一次真实等待20秒的超时测试。计时提前触发的测试入口只位于验证API，不改变正常操作期限。
@@ -73,11 +86,13 @@
 | `src/rules.js` | 牌组、明确规则、记分、状态机与AI |
 | `src/app.js` | 页面、计时、动画、交互及独立演示场景 |
 | `assets/*.woff2` | 内嵌字体源文件 |
+| `assets/cards/` | CC0原始牌面、优化图片、许可与来源清单 |
 | `build.cjs` | 将源码和字体构建为可独立打开的HTML |
 | `verification/check.cjs` | 无额外依赖的规则检查和AI完整牌局验证 |
 | `verification/browser.cjs` | Playwright浏览器行为与截图验证 |
 | `verification/visual.py` | Figma桌布颜色对照与并排图 |
 | `verification/prepare-fonts.py` | 根据界面所需字符获取设计字体子集，内容变化需要新字形时使用 |
+| `verification/prepare-cards.cjs` | 固定上游版本，获取SVG并用Sharp生成WebP，仅素材再生成时需要 |
 
 已有字体源文件时，重建和规则验证只需Node.js：
 

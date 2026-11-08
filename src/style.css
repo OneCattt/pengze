@@ -8,6 +8,7 @@
 .poker-card .card-art{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit;pointer-events:none;user-select:none}
 .poker-card .corner{position:absolute;left:0;top:0;width:17.5px;min-width:17.5px;padding:3px 0 1px 2.5px;align-items:center;line-height:13px;font-size:12px;background:#fff;border-radius:1px;pointer-events:none}
 .poker-card .corner .suit{font-size:12px;line-height:12px}
+.poker-card .corner>span:first-child{font-family:var(--sans);font-size:12px;font-weight:700;font-variant-numeric:lining-nums tabular-nums}
 .poker-card.joker .corner{font-family:var(--serif);font-size:11px;line-height:14px}
 .poker-card.joker .corner .suit{font-size:11px;line-height:12px}
 .poker-card.selected:after{content:'';position:absolute;inset:0;border:1.5px solid #d8af4e;border-radius:inherit;pointer-events:none;z-index:2}
@@ -19,4 +20,68 @@
 .expanded-grid .poker-card{width:49px;height:68.6px;padding:0;justify-self:center}
 .expanded-footer{margin-top:8px}
 .mini-bottom-cards .poker-card{height:32.2px;padding:0}
+.header-actions .managed-badge{padding:6px 8px;font-size:9px;min-height:27px}
+.exit-panel{width:320px;padding:24px}
+.exit-panel p{font-size:11px;color:#a6b7aa;margin:0 0 20px}
+.exit-actions{display:flex;justify-content:flex-end;gap:10px}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+.board{
+  background:
+    repeating-linear-gradient(45deg,#d5c38805 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(-45deg,#001b1409 0 1px,transparent 1px 4px),
+    radial-gradient(ellipse 72% 72% at 50% 48%,#117051 0%,#07503b 55%,#042b22 100%);
+}
+.home-board{
+  background:
+    repeating-linear-gradient(45deg,#e5d49806 0 1px,transparent 1px 5px),
+    radial-gradient(circle farthest-corner at center,#14694d 0%,#073e30 56%,#031f19 100%);
+}
+.table-line{
+  border-color:#cdb36c42;
+  box-shadow:0 0 0 4px #03281e80,0 0 0 5px #c9ae6320,inset 0 0 52px #00170f54;
+}
+.table-emblem{
+  border:1px double #dcc27c2b;
+  box-shadow:0 0 0 5px #d1b66508,inset 0 0 0 4px #d1b6650b;
+  color:#e3cb8628;
+}
+.home-rings{
+  border:1px solid #dbc47b30;
+  box-shadow:0 0 0 12px #d1b66908,0 0 0 13px #d1b6691a,0 0 0 42px #d1b6690a,0 0 0 84px #d1b66908;
+}
+.home-name{color:#f3e3b4;text-shadow:0 2px 0 #03291c,0 3px 12px #001a1259}
+.home-title{color:#e0bd6d;text-shadow:0 2px 0 #73521c,0 5px 16px #001a1266}
+.home-title:before,.home-title:after{
+  content:'◆';position:absolute;top:2px;color:#d4ba745e;font:8px var(--serif);
+}
+.home-title:before{left:26px}.home-title:after{right:26px}
+.home-start{box-shadow:inset 0 0 0 2px #f3dea04d,0 4px 12px #001a1255}
+.avatar{
+  background:radial-gradient(circle at 50% 34%,#246d54,#103d30 72%);
+  border:1px solid #d0b673;
+  box-shadow:inset 0 0 0 3px #0b382b,inset 0 0 0 4px #c7aa644d;
+  text-shadow:0 1px 2px #001b14;
+}
+.seat.active .avatar{box-shadow:inset 0 0 0 3px #0b382b,inset 0 0 0 4px #d9c27880,0 0 0 2px #c6ab5a45,0 0 17px #d3b66a30}
+.dealer-badge{font-family:var(--serif);box-shadow:0 1px 3px #001d15aa,inset 0 0 0 1px #fff1ba80}
+.seat-action{color:#f2dda5;text-shadow:0 1px 3px #002219}
+.bottom-pile .card-back,.flying-card.card-back,.deal-stock{
+  background:
+    repeating-linear-gradient(45deg,transparent 0 3px,#e1c97f28 3px 4px,transparent 4px 7px),
+    repeating-linear-gradient(-45deg,transparent 0 3px,#e1c97f28 3px 4px,transparent 4px 7px),
+    #0b5942;
+}
+.bottom-pile .card-back:after,.flying-card.card-back:after,.deal-stock:after{
+  background:#0b4d3b;
+  border:1px solid #d4bc7799;
+  border-radius:50%;
+  color:#e5cf91;
+  font-weight:700;
+}
+.deal-stock:after{inset:9px 6px;line-height:32px;font-size:16px}
+.result-badge{
+  transform:rotate(-8deg);
+  box-shadow:inset 0 0 0 2px #082d23,0 0 0 1px #c9584b66;
+}
+.result-badge.win{box-shadow:inset 0 0 0 2px #082d23,0 0 0 1px #d2b76566}

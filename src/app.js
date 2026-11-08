@@ -27,6 +27,7 @@
   let fast = params.get('speed') === 'fast';
   let frozen = params.has('review');
   let demoName = '';
+  let actionInProgress = false;
   const events = [];
 
   function escape(value) {
@@ -89,7 +90,7 @@
   function renderHeader() {
     const effective = game.dealer === null ? '—' : game.actual - game.penalty;
     const target = game.highest || '—';
-    return `<header class="table-header"><button class="brand" style="background:none;padding:0" data-action="menu" aria-label="彭泽三打一，验证场景">彭泽三打一</button><button class="score-summary" data-action="score">第${game.round}局 目标 <b>${target}</b> 主 <b>${Rules.SUIT_SYMBOLS[game.trump] || '—'}</b> 有效 <b>${effective}</b></button><div class="header-actions">${game.managed ? '<span class="managed-badge">托管中</span>' : ''}<button class="text-button" data-action="rules">规则</button><span class="capsule" aria-label="微信胶囊预留区域">···</span></div></header>`;
+    return `<header class="table-header"><button class="brand" style="background:none;padding:0" data-action="menu" aria-label="彭泽三打一，验证场景">彭泽三打一</button><button class="score-summary" data-action="score">第${game.round}局 目标 <b>${target}</b> 主 <b>${Rules.SUIT_SYMBOLS[game.trump] || '—'}</b> 有效 <b>${effective}</b></button><div class="header-actions">${game.managed ? '<button class="managed-badge" data-action="resume">取消托管</button>' : ''}<button class="text-button" data-action="exit">退出本局</button><button class="text-button" data-action="rules">规则</button><span class="capsule" aria-label="微信胶囊预留区域">···</span></div></header>`;
   }
 
   function renderSeat(player) {
@@ -114,7 +115,7 @@
   }
 
   function canSelect() {
-    return game.actor === 0 && !game.managed && ['bury', 'playing'].includes(game.phase);
+    return game.actor === 0 && !game.managed && !actionInProgress && ['bury', 'playing'].includes(game.phase);
   }
 
   function renderHand() {
@@ -139,6 +140,7 @@
   function renderControls() {
     const phase = game.phase;
     if (phase === 'result') return '';
+    if (actionInProgress) return '<div class="center-status">出牌中</div>';
     if (['dealing', 'pickup', 'burying', 'collecting'].includes(phase)) {
       const message = phase === 'collecting' ? `${names[game.winner()]}收墩` : { dealing: '洗牌发牌中', pickup: `${names[game.dealer]}收取底牌`, burying: '扣底中' }[phase];
       return `<div class="center-status">${message}</div>`;
@@ -179,7 +181,7 @@
     { title: '主牌与分牌', detail: '<p>大小王和选定花色为主牌，无跨花色固定主牌，无“无主”。</p><p>大王＞小王＞主A＞主K＞主Q＞主J＞主10……＞主2。副牌A最大、2最小。</p><p>5计5分，10和K各计10分，两副合计200分。</p>' },
     { title: '出牌与跟牌', detail: '<p>沿用升级：同花色必须先跟，有对子须跟对子，有同长度拖拉机须跟拖拉机。花色不足先出完该花色，再补其他牌。</p><p>完全缺门可垫牌或用对应结构全主牌杀牌。部分原花色加主牌不算完整杀牌。同级先出者大。每墩赢家获得下一墩首攻权。</p><p>小王对＋主A对、大王对＋小王对＋主A对都是拖拉机。</p>' },
     { title: '甩牌与结算', detail: '<p>甩错只强制打出失败的最小牌型，其他牌留手。庄家甩错每张扣10游戏分；闲家每张向庄家支付15元。</p><p>庄家有效分＝实际赢墩抓分−甩错扣分。有效分达到叫分即赢，允许负分。</p><p>刚好达标每家赢10元。超/差5或10分对应10元，15或20分对应15元，依次递增。当前金额档位为文档暂定V1。闲家甩错转账另记。</p><p>全员不叫：首叫位−30元，另外三人各+10元。</p>' },
-    { title: '超时托管', detail: '<p>当前验证稿四个操作阶段均20秒。叫分、定主20秒沿用文档暂定V1，扣底、出牌20秒已确认。</p><p>超时进入托管，由AI接管并持续自动出牌，不在下一轮自动恢复手动。取消托管和跨局保持的最终规则仍待确认。</p>' }
+    { title: '超时托管', detail: '<p>当前验证稿四个操作阶段均20秒。叫分、定主20秒沿用文档暂定V1，扣底、出牌20秒已确认。</p><p>超时后由AI持续托管。点击“取消托管”恢复手动；已经提交的出牌和动画继续完成。轮到真人操作时有20秒，再次超时仍进入托管。</p>' }
   ];
 
   function modal(contents, className, attributes = '') {
@@ -192,6 +194,8 @@
     } else if (panel === 'ruleDetail') {
       const section = ruleSections[ruleSection];
       overlay.innerHTML = modal(`<button class="modal-close" data-action="rules" aria-label="返回规则目录">×</button><div class="eyebrow">玩法说明</div><h2>${section.title}</h2>${section.detail}${button('返回目录', 'rules', true)}`, 'rule-detail-panel', `aria-label="${section.title}"`);
+    } else if (panel === 'exit') {
+      overlay.innerHTML = modal(`<h2>退出本局？</h2><p>当前牌局将结束。</p><div class="exit-actions">${button('继续游戏', 'close', true)}${button('退出本局', 'confirm-exit')}</div>`, 'exit-panel', 'aria-label="退出本局"');
     } else if (panel === 'expanded') {
       overlay.innerHTML = modal(`<div class="expanded-top"><h2>我的手牌 · ${game.hands[0].length}张</h2>${canSelect() ? countdownHTML() : ''}<button class="text-button" data-action="close">收起 ×</button></div><div class="expanded-grid">${handCards().map(card => cardHTML(card, { interactive: true, selected: selected.has(card.id) })).join('')}</div><div class="expanded-footer"><span>已选 ${selected.size}${game.phase === 'bury' ? '/8' : ' 张'}</span>${canSelect() ? `${button('取消选择', 'clear')}${button(game.phase === 'bury' ? '确认扣底' : '出牌', game.phase === 'bury' ? 'bury' : 'play', true, game.phase === 'bury' ? selected.size !== 8 : selected.size === 0)}` : ''}</div>`, 'expanded-panel', 'aria-label="展开手牌"');
     } else if (panel === 'menu') renderMenu();
@@ -208,12 +212,12 @@
     const allPass = result.type === 'allPass';
     const title = allPass ? '全员不叫' : `${result.won ? result.effective === result.target ? '刚好达标' : `超${result.effective - result.target}分` : `差${result.target - result.effective}分`} · ${result.won ? '庄家胜' : '未能达标'}`;
     const equation = allPass ? `<p class="allpass-note">首叫位：${names[result.first]} · 赔付30元，其余各得10元</p>` : `<div class="score-equation"><div>目标<b>${result.target}</b></div><i>│</i><div>实际<b>${result.actual}</b></div><i>−</i><div>扣分<b>${result.penalty}</b></div><i>＝</i><div>有效<b>${result.effective}</b></div></div>`;
-    overlay.innerHTML = modal(`<div class="result-badge ${!allPass && result.won ? 'win' : ''}">${allPass ? '和' : result.won ? '胜' : '负'}</div><div class="eyebrow">本局结算</div><h2>${title}</h2>${equation}<table class="result-table"><thead><tr><th>玩家</th><th class="result-detail" ${showDetails ? '' : 'hidden'}>正常</th><th class="result-detail" ${showDetails ? '' : 'hidden'}>甩错转账</th><th>本局</th><th>累计</th></tr></thead><tbody>${names.map((name, player) => `<tr><td>${name}${game.dealer === player && !allPass ? ' · 庄' : ''}</td><td class="result-detail" ${showDetails ? '' : 'hidden'}>${amount(result.normal[player])}</td><td class="result-detail" ${showDetails ? '' : 'hidden'}>${amount(result.transfers[player])}</td><td>${amount(result.net[player])}元</td><td>${amount(game.totals[player])}元</td></tr>`).join('')}</tbody></table>${allPass ? '' : `<div class="result-bottom"><span>扣底 · 不计抓分</span><div class="mini-bottom-cards">${game.bottom.map(card => cardHTML(card)).join('')}</div></div>`}<div class="result-actions"><button class="text-button" data-action="result-details">${showDetails ? '收起明细' : '结算明细'}</button>${button('下一局 ›', 'next', true)}<button class="text-button" data-action="history">累计</button><button class="text-button" data-action="rules">规则</button></div>`, 'result-panel', 'aria-label="本局结算"');
+    overlay.innerHTML = modal(`<div class="result-badge ${!allPass && result.won ? 'win' : ''}">${allPass ? '和' : result.won ? '胜' : '负'}</div><div class="eyebrow">本局结算</div><h2>${title}</h2>${equation}<table class="result-table"><thead><tr><th>玩家</th><th class="result-detail" ${showDetails ? '' : 'hidden'}>正常</th><th class="result-detail" ${showDetails ? '' : 'hidden'}>甩错转账</th><th>本局</th><th>累计</th></tr></thead><tbody>${names.map((name, player) => `<tr><td>${name}${game.dealer === player && !allPass ? ' · 庄' : ''}</td><td class="result-detail" ${showDetails ? '' : 'hidden'}>${amount(result.normal[player])}</td><td class="result-detail" ${showDetails ? '' : 'hidden'}>${amount(result.transfers[player])}</td><td>${amount(result.net[player])}元</td><td>${amount(game.totals[player])}元</td></tr>`).join('')}</tbody></table>${allPass ? '' : `<div class="result-bottom"><span>扣底 · 不计抓分</span><div class="mini-bottom-cards">${game.bottom.map(card => cardHTML(card)).join('')}</div></div>`}<div class="result-actions"><button class="text-button" data-action="result-details">${showDetails ? '收起明细' : '结算明细'}</button>${button('下一局 ›', 'next', true)}<button class="text-button" data-action="history">累计</button><button class="text-button" data-action="rules">规则</button>${game.managed ? '<button class="text-button" data-action="resume">取消托管</button>' : ''}<button class="text-button" data-action="exit">返回首页</button></div>`, 'result-panel', 'aria-label="本局结算"');
   }
 
   function renderMenu() {
     const labels = [['bid', '看牌叫分'], ['pickup', '庄家收底33张'], ['trump', '定主'], ['bury', '扣底选3张'], ['bury8', '扣底选8张'], ['play', '庄家首攻'], ['ai', 'AI当庄'], ['throwSingle', '甩错单张'], ['throwPair', '甩错对子'], ['timeout', '超时托管'], ['result', '结算示例'], ['exact', '刚好达标'], ['allpass', '全员不叫']];
-    overlay.innerHTML = modal(`<button class="modal-close" data-action="close" aria-label="关闭验证面板">×</button><div class="eyebrow">原型校验 · MD V1.1</div><h2>独立验证场景${demoName ? `<span class="scene-badge">${escape(demoName)}</span>` : ''}</h2><p>下列入口会开启独立示例牌局。正常游戏请从首页“开始游戏”进入。</p><div class="dev-grid">${labels.map(([id, label]) => button(label, 'scenario', false, false, `data-scenario="${id}"`)).join('')}${button(fast ? '恢复正常速度' : '加速AI演示', 'speed')}${button('导出过程记录', 'export')}${button('返回首页', 'home')}</div><div class="rule-status">已实现：真实108张、无上限叫分、33→25扣底、单张/对子/明确的拖拉机跟牌、单张/对子甩错、抓分与结算、持续托管。<br>未推定：复杂拖拉机拆分、成功混合甩牌的跟牌和牌权、多类失败结构、缺门影响甩牌检查的分歧牌例。此类选择会在出牌前提示，牌和金额均不变。<br>正常结算金额使用MD暂定V1。托管取消及跨局保持尚未定案，本稿不自动解除托管。</div><p>Figma节点：<code>2:7486</code> · HTML为本地验证稿，最终平台仍为微信小游戏。</p><div class="state-proof">${game.phase === 'home' ? '尚未开局' : escape(`当前阶段 ${game.phase} · 第${game.round}局\n手牌 ${game.hands.map(hand => hand.length).join('/')} · 底牌${game.bottom.length} · 牌组200分\n已结算${game.history.length}局 · 当前${game.managed ? '托管中' : '手动'}`)}</div>`, 'dev-panel', 'aria-label="原型验证场景"');
+    overlay.innerHTML = modal(`<button class="modal-close" data-action="close" aria-label="关闭验证面板">×</button><div class="eyebrow">原型校验 · MD V1.2</div><h2>独立验证场景${demoName ? `<span class="scene-badge">${escape(demoName)}</span>` : ''}</h2><p>下列入口会开启独立示例牌局。正常游戏请从首页“开始游戏”进入。</p><div class="dev-grid">${labels.map(([id, label]) => button(label, 'scenario', false, false, `data-scenario="${id}"`)).join('')}${button(fast ? '恢复正常速度' : '加速AI演示', 'speed')}${button('导出过程记录', 'export')}${button('返回首页', 'home')}</div><div class="rule-status">已实现：真实108张、无上限叫分、33→25扣底、单张/对子/明确的拖拉机跟牌、单张/对子甩错、抓分与结算、持续托管。<br>未推定：复杂拖拉机拆分、成功混合甩牌的跟牌和牌权、多类失败结构、缺门影响甩牌检查的分歧牌例。此类选择会在出牌前提示，牌和金额均不变。<br>正常结算金额使用MD暂定V1。可主动取消托管；退出会中断当前验证局，正式退出奖罚待确认。</div><p>Figma节点：<code>2:7486</code> · HTML为本地验证稿，最终平台仍为微信小游戏。</p><div class="state-proof">${game.phase === 'home' ? '尚未开局' : escape(`当前阶段 ${game.phase} · 第${game.round}局\n手牌 ${game.hands.map(hand => hand.length).join('/')} · 底牌${game.bottom.length} · 牌组200分\n已结算${game.history.length}局 · 当前${game.managed ? '托管中' : '手动'}`)}</div>`, 'dev-panel', 'aria-label="原型验证场景"');
   }
 
   function clearActionTimer() {
@@ -349,8 +353,12 @@
     deadline = Date.now() + 20000;
     const autoAt = automatic ? Date.now() + (fast ? 8 : 700) : Infinity;
     clock();
-    actionTimer = setInterval(() => {
-      if (generation !== currentGeneration || game.version !== expectedVersion) return clearActionTimer();
+    const timer = setInterval(() => {
+      if (generation !== currentGeneration || game.version !== expectedVersion) {
+        clearInterval(timer);
+        if (actionTimer === timer) { actionTimer = null; deadline = 0; }
+        return;
+      }
       clock();
       if (Date.now() >= deadline) {
         game.expire(expectedVersion);
@@ -363,6 +371,7 @@
         autoAction().catch(handleError);
       }
     }, fast ? 10 : 100);
+    actionTimer = timer;
   }
 
   async function autoAction() {
@@ -402,6 +411,7 @@
     const player = game.actor;
     const positions = new Map(ids.map(id => [id, cardPosition(id)]));
     const result = game.play(player, ids);
+    actionInProgress = true;
     clearToast();
     clearActionTimer();
     panel = null;
@@ -419,6 +429,7 @@
     zone.style.visibility = 'hidden';
     await Promise.all(result.cards.map((card, index) => fly(player === 0 ? positions.get(card.id) : { x: centers[player].x - 18, y: centers[player].y - 26 }, { x: (rect.left - tableRect.left) / scale + index * 23, y: (rect.top - tableRect.top) / scale }, card, index * 30)));
     if (generation !== currentGeneration) return;
+    actionInProgress = false;
     record('出牌', { player, cards: result.cards.map(card => card.id), handCount: game.hands[player].length });
     sync();
   }
@@ -426,6 +437,21 @@
   function handleError(error) {
     toast(error.message || '操作未完成');
     record('操作未提交', { message: error.message, code: error.code || 'ERROR' });
+  }
+
+  function leaveRound() {
+    const previousPhase = game.phase;
+    clearActionTimer();
+    generation += 1;
+    actionInProgress = false;
+    motion.getAnimations({ subtree: true }).forEach(animation => animation.cancel());
+    motion.replaceChildren();
+    selected.clear();
+    panel = null;
+    demoName = '';
+    clearToast();
+    if (game.leave()) record('退出本局', { previousPhase });
+    render();
   }
 
   function fixtureDeal(preferences = [[], [], [], []]) {
@@ -502,6 +528,7 @@
     clearActionTimer();
     clearToast();
     generation += 1;
+    actionInProgress = false;
     motion.replaceChildren();
     frozen = keepFrozen;
     selected.clear();
@@ -549,10 +576,27 @@
       frozen = false;
       panel = null;
       demoName = '';
+      actionInProgress = false;
       game.start();
       record('开始新局');
       return sync();
     }
+    if (action === 'resume') {
+      if (!game.resume()) return;
+      clearToast();
+      record('取消托管，恢复手动');
+      if (actionInProgress || ['dealing', 'pickup', 'burying', 'collecting'].includes(game.phase)) {
+        clearActionTimer();
+        surface.querySelector('.table-header').outerHTML = renderHeader();
+      } else sync();
+      return;
+    }
+    if (action === 'exit' || action === 'home') {
+      if (game.phase === 'home') { panel = null; return renderOverlay(); }
+      if (game.phase !== 'result') { panel = 'exit'; return renderOverlay(); }
+      return leaveRound();
+    }
+    if (action === 'confirm-exit') return leaveRound();
     if (action === 'rules') { panel = 'rules'; return renderOverlay(); }
     if (action === 'rule-detail') { ruleSection = Number(element.dataset.index); panel = 'ruleDetail'; return renderOverlay(); }
     if (action === 'close') { panel = null; return renderOverlay(); }
@@ -563,10 +607,9 @@
     if (action === 'result-details') { showDetails = !showDetails; return renderOverlay(); }
     if (action === 'scenario') return loadScenario(element.dataset.scenario);
     if (action === 'allpass') return loadScenario('allpass');
-    if (action === 'home') return loadScenario('home');
     if (action === 'speed') { fast = !fast; renderOverlay(); return toast(fast ? '已加速AI与动画，真人操作仍为20秒' : '已恢复正常速度'); }
     if (action === 'export') {
-      const file = new Blob([JSON.stringify({ rulesVersion: 'V1.1', source: 'Figma 2:7486', scenario: demoName, events }, null, 2)], { type: 'application/json' });
+      const file = new Blob([JSON.stringify({ rulesVersion: 'V1.2', source: 'Figma 2:7486', scenario: demoName, events }, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(file);
       const anchor = document.createElement('a');
       anchor.href = url;
@@ -634,6 +677,7 @@
     get deadline() { return deadline; },
     get selected() { return Array.from(selected); },
     get frozen() { return frozen; },
+    get actionInProgress() { return actionInProgress; },
     scenario: loadScenario,
     freeze(value = true) { frozen = value; if (value) clearActionTimer(); else sync(); },
     setFast(value) { fast = value; },

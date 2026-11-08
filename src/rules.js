@@ -428,6 +428,28 @@
       return true;
     }
 
+    resume() {
+      if (!this.managed || this.phase === 'home') return false;
+      this.managed = false;
+      this.version += 1;
+      return true;
+    }
+
+    leave() {
+      if (this.phase === 'home') return false;
+      this.phase = 'home';
+      this.managed = false;
+      this.actor = null;
+      this.hands = [[], [], [], []];
+      this.stock = [];
+      this.bottom = [];
+      this.trick = [];
+      this.captured = [[], [], [], []];
+      this.result = null;
+      this.version += 1;
+      return true;
+    }
+
     aiBid(player) {
       const hand = this.hands[player];
       const bestSuit = Math.max(...SUITS.map(suit => hand.filter(card => card.suit === suit).length));

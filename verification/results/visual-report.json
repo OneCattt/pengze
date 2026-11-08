@@ -12,11 +12,11 @@
         55
       ],
       "html": [
-        6,
-        74,
-        54
+        10,
+        76,
+        56
       ],
-      "maxChannelDifference": 1
+      "maxChannelDifference": 3
     },
     {
       "position": [
@@ -29,11 +29,11 @@
         63
       ],
       "html": [
-        9,
-        87,
-        63
+        13,
+        89,
+        64
       ],
-      "maxChannelDifference": 1
+      "maxChannelDifference": 4
     },
     {
       "position": [
@@ -46,11 +46,11 @@
         67
       ],
       "html": [
-        11,
+        12,
         93,
         68
       ],
-      "maxChannelDifference": 1
+      "maxChannelDifference": 2
     },
     {
       "position": [
@@ -63,11 +63,11 @@
         68
       ],
       "html": [
-        11,
+        13,
         94,
         68
       ],
-      "maxChannelDifference": 1
+      "maxChannelDifference": 2
     },
     {
       "position": [
@@ -80,11 +80,11 @@
         51
       ],
       "html": [
-        5,
+        8,
         68,
-        51
+        52
       ],
-      "maxChannelDifference": 0
+      "maxChannelDifference": 3
     },
     {
       "position": [
@@ -98,7 +98,7 @@
       ],
       "html": [
         5,
-        68,
+        67,
         51
       ],
       "maxChannelDifference": 1

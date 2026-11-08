@@ -1,5 +1,5 @@
 {
-  "artifactSha256": "19eb2cb4ff68cb8f2e55f85cfbd2a476718635a317a7acacd24df7f646a86f54",
+  "artifactSha256": "95eb6c9a9f8a211f26af63237afb042e9b0c284fffe7fc80125becfed5b880cc",
   "passed": 12,
   "checks": [
     "667px：选中7张抬牌，角标区无原始图案重影",

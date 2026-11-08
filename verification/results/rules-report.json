@@ -1,8 +1,8 @@
 {
   "date": "2026-11-08",
   "rulesVersion": "V1.1",
-  "rulesSha256": "24205540500e8eee9b34b65442327c21051a7d743c4a9748c12982852e12530e",
-  "passed": 17,
+  "rulesSha256": "fcccbff662b3c81f2ec02108047443c9af7b1fd5a560c32fc312d2113fcabfcb",
+  "passed": 19,
   "results": [
     {
       "name": "双副108张、实体唯一、每种牌两张、总分200",
@@ -66,6 +66,14 @@
     },
     {
       "name": "旧版本计时回调失效，托管持续到后续行动",
+      "status": "passed"
+    },
+    {
+      "name": "主动取消托管恢复手动、旧超时失效，重复取消不改版本",
+      "status": "passed"
+    },
+    {
+      "name": "退出中断当前局、保留已完成局累计，旧回调与重复退出无效",
       "status": "passed"
     },
     {

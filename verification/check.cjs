@@ -269,6 +269,44 @@ check('旧版本计时回调失效，托管持续到后续行动', () => {
   assert.equal(game.managed, true);
 });
 
+check('主动取消托管恢复手动、旧超时失效，重复取消不改版本', () => {
+  const game = new Rules.Game({ first: 0 });
+  game.start(); game.finishDeal();
+  const before = JSON.stringify(game.hands);
+  const oldVersion = game.version;
+  assert.ok(game.expire(oldVersion));
+  assert.ok(game.resume());
+  assert.equal(game.managed, false);
+  assert.equal(game.expire(oldVersion), false);
+  assert.equal(JSON.stringify(game.hands), before);
+  const resumedVersion = game.version;
+  assert.equal(game.resume(), false);
+  assert.equal(game.version, resumedVersion);
+  assert.ok(game.expire(resumedVersion));
+});
+
+check('退出中断当前局、保留已完成局累计，旧回调与重复退出无效', () => {
+  const game = new Rules.Game({ first: 0 });
+  game.start(); game.finishDeal();
+  while (game.phase === 'bidding') game.bid(game.actor, null);
+  const totals = game.totals.slice();
+  const history = JSON.stringify(game.history);
+  game.start(); game.finishDeal();
+  const oldVersion = game.version;
+  assert.ok(game.leave());
+  assert.equal(game.phase, 'home');
+  assert.equal(game.managed, false);
+  assert.equal(game.expire(oldVersion), false);
+  assert.deepEqual(game.totals, totals);
+  assert.equal(JSON.stringify(game.history), history);
+  const leftVersion = game.version;
+  assert.equal(game.leave(), false);
+  assert.equal(game.version, leftVersion);
+  game.start(); game.finishDeal();
+  assert.deepEqual(game.hands.map(hand => hand.length), [25, 25, 25, 25]);
+  assert.equal(game.bottom.length, 8);
+});
+
 let normalGames = 0;
 let passedGames = 0;
 let completedTricks = 0;

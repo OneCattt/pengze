@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#063b2d">
+  <title>彭泽三打一 · 原型验证</title>
+  <style>__FONTS__
+__STYLE__</style>
+</head>
+<body>
+  <main id="viewport" aria-label="彭泽三打一游戏牌桌">
+    <div id="board" class="board home-board">
+      <div id="surface"></div>
+      <div id="motion" class="motion-layer" aria-hidden="true"></div>
+      <div id="overlay"></div>
+      <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    </div>
+  </main>
+  <div class="portrait-guide"><span class="rotate-symbol">▱</span><strong>横屏，开一局</strong><span>请将手机横过来</span></div>
+  <script>__RULES__
+__APP__</script>
+</body>
+</html>

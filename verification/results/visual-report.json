@@ -1,0 +1,108 @@
+{
+  "referenceNode": "2:7789",
+  "samples": [
+    {
+      "position": [
+        80,
+        60
+      ],
+      "figma": [
+        7,
+        75,
+        55
+      ],
+      "html": [
+        6,
+        74,
+        54
+      ],
+      "maxChannelDifference": 1
+    },
+    {
+      "position": [
+        130,
+        80
+      ],
+      "figma": [
+        9,
+        86,
+        63
+      ],
+      "html": [
+        9,
+        87,
+        63
+      ],
+      "maxChannelDifference": 1
+    },
+    {
+      "position": [
+        160,
+        150
+      ],
+      "figma": [
+        10,
+        92,
+        67
+      ],
+      "html": [
+        11,
+        93,
+        68
+      ],
+      "maxChannelDifference": 1
+    },
+    {
+      "position": [
+        400,
+        150
+      ],
+      "figma": [
+        11,
+        93,
+        68
+      ],
+      "html": [
+        11,
+        94,
+        68
+      ],
+      "maxChannelDifference": 1
+    },
+    {
+      "position": [
+        480,
+        210
+      ],
+      "figma": [
+        5,
+        68,
+        51
+      ],
+      "html": [
+        5,
+        68,
+        51
+      ],
+      "maxChannelDifference": 0
+    },
+    {
+      "position": [
+        80,
+        210
+      ],
+      "figma": [
+        6,
+        68,
+        52
+      ],
+      "html": [
+        5,
+        68,
+        51
+      ],
+      "maxChannelDifference": 1
+    }
+  ],
+  "scope": "仅核对六个无遮挡桌布位置的颜色；布局、字体、操作条、选牌、结算和适配另行人工看图检查，不代表整页像素一致。"
+}

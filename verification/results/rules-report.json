@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-08",
+  "rulesVersion": "V1.1",
+  "rulesSha256": "24205540500e8eee9b34b65442327c21051a7d743c4a9748c12982852e12530e",
+  "passed": 17,
+  "results": [
+    {
+      "name": "双副108张、实体唯一、每种牌两张、总分200",
+      "status": "passed"
+    },
+    {
+      "name": "先发牌后叫分，四人各25张、底牌8张",
+      "status": "passed"
+    },
+    {
+      "name": "80起叫、5分步长、跳叫且无200分上限",
+      "status": "passed"
+    },
+    {
+      "name": "全员不叫逐座位赔付、重复结算拦截、下一局轮换与累计",
+      "status": "passed"
+    },
+    {
+      "name": "庄家必须25→33→25，收底和扣底完成前不能出牌",
+      "status": "passed"
+    },
+    {
+      "name": "扣王、主牌和计分牌合法，底牌分数不入抓分",
+      "status": "passed"
+    },
+    {
+      "name": "主副牌、普通A至2、大小王及同级先出",
+      "status": "passed"
+    },
+    {
+      "name": "对子、两连对、三连对和王对相连，跨副花色不合法",
+      "status": "passed"
+    },
+    {
+      "name": "跟牌必须同花色、数量正确、有对须跟、缺门可垫牌",
+      "status": "passed"
+    },
+    {
+      "name": "跟拖拉机必须匹配结构，散牌或部分主牌不能杀对子",
+      "status": "passed"
+    },
+    {
+      "name": "甩错单张：只出最小失败单张，未出牌保留，庄家扣10分",
+      "status": "passed"
+    },
+    {
+      "name": "甩错对子：仅失败对子2张，庄家扣20分",
+      "status": "passed"
+    },
+    {
+      "name": "闲家甩错款只给庄家，不改变抓分，其他闲家不分担",
+      "status": "passed"
+    },
+    {
+      "name": "缺少明确牌例的成功甩牌不猜规则、不改牌和金额",
+      "status": "passed"
+    },
+    {
+      "name": "历史10个金额示例、负有效分、四个庄家位置及金额守恒",
+      "status": "passed"
+    },
+    {
+      "name": "旧版本计时回调失效，托管持续到后续行动",
+      "status": "passed"
+    },
+    {
+      "name": "250个种子完整AI牌局：合法跟牌、抓分来源、无抠底、108张守恒",
+      "status": "passed"
+    }
+  ],
+  "simulation": {
+    "games": 250,
+    "normalGames": 250,
+    "passedGames": 0,
+    "completedTricks": 4617
+  },
+  "boundary": "复杂甩牌与升级地方差异牌例不推定；250局AI以单张、对子首攻，不代表全部拖拉机及混合结构验收。"
+}

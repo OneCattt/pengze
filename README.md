@@ -27,7 +27,7 @@
 采用 [Public Domain and CC0 Playing Cards](https://github.com/AustinGabriel/Public-Domain-and-CC0-Playing-Cards) 的完整54种传统牌面：52张普通牌、黑色小王和红色大王。固定来源版本、CC0许可、原始SVG及图片指纹保存在 `assets/cards/`。
 
 - 按原始5:7比例导出240×336 WebP，总计约521KB，相比原始SVG减少约91.5%。构建后的独立HTML约1.12MB。
-- 重叠手牌使用独立的大点数、花色和大小王角标；末张完整牌、展开手牌、出牌、扣底翻面及结算底牌直接显示原始图片。两种展示互斥，完整图片上不再叠加自绘角标。
+- 所有手牌统一使用独立的大点数、花色和大小王角标，末张也采用相同展示；展开手牌、出牌、扣底翻面及结算底牌直接显示原始图片。两种展示互斥，完整图片上不再叠加自绘角标。
 - 选中时抬起并显示金边，选中7张等组合也不会露出重复图案。展开区域支持完整查看33张牌；原有绿色“彭”字牌背继续保留。
 - 两副牌复用54种图像，108张实体牌ID保持独立。图片仅参与展示，游戏规则实现没有变化。
 - 图片全部内嵌，无需联网。当前仍属于本地HTML验证，微信小游戏的资源打包与真机表现待正式工程验证。
@@ -72,8 +72,9 @@
 | `verification/results/figma-vs-html.png` | Figma叫分画面与HTML叫分画面的并排对照 |
 | `verification/results/card-upgrade-comparison.png` | 牌面升级前后的小屏33张展开手牌对照 |
 | `verification/results/card-corner-fixes.png` | 第一轮局部修复历史对照，已被拆分渲染方案替代 |
-| `verification/results/full-face-report.json` | 三种屏幕宽度的选中抬牌及25/33张展开区原图对照回归 |
+| `verification/results/full-face-report.json` | 三种宽度的抬牌、末张手牌及25/33张展开区原图对照，共12项回归 |
 | `verification/results/card-rendering-fix.png` | 渲染拆分前后的7张选牌和完整展开牌面对照 |
+| `verification/results/last-card-consistency.png` | 末张手牌取消原图例外，与其他手牌统一角标的前后对照 |
 | `verification/results/*.png` | 手机横屏、小屏、桌面、竖屏、扣底动画、甩错与结算截图 |
 
 浏览器验证基于本机Chromium与file协议，包括真人实际叫205分成为庄家、收底、定主、扣底、触发托管、所有手牌出完、结算和下一局。另有一次真实等待20秒的超时测试。计时提前触发的测试入口只位于验证API，不改变正常操作期限。

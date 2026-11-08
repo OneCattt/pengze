@@ -68,7 +68,7 @@ async function run() {
       const image = element.querySelector('.card-art');
       const cornerElement = element.querySelector('.corner');
       if (element.dataset.face !== `${card.suit}${card.rank}`) return false;
-      if (index === elements.length - 1) return !cornerElement && image?.src === PENGZE_CARD_ART[element.dataset.face] && getComputedStyle(image).pointerEvents === 'none';
+      if (!cornerElement || image) return false;
       const corner = cornerElement.getBoundingClientRect();
       const edge = elements[index + 1]?.getBoundingClientRect().left ?? element.getBoundingClientRect().right;
       return !image && corner.right <= edge + .5 && cornerElement.textContent === `${window.PengzeRules.RANK_NAMES[card.rank] || card.rank}${card.suit === 'J' ? '王' : window.PengzeRules.SUIT_SYMBOLS[card.suit]}`;

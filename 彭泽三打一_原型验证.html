@@ -657,7 +657,7 @@ const PENGZE_CARD_ART = {"S2":"data:image/webp;base64,UklGRi4KAABXRUJQVlA4WAoAAA
     const cards = handCards();
     const step = Math.min(25.5, (644 - 52.5) / Math.max(1, cards.length - 1));
     const width = (cards.length - 1) * step + 52.5;
-    const html = cards.map((card, index) => cardHTML(card, { interactive: true, compact: index < cards.length - 1, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
+    const html = cards.map((card, index) => cardHTML(card, { interactive: true, compact: true, selected: selected.has(card.id), style: `left:${index * step}px;z-index:${index}` })).join('');
     return `<div class="hand-zone"><div class="hand-fan" style="width:${width}px" aria-label="我的手牌，共${cards.length}张">${html}</div></div><div class="hand-tools"><button data-action="expand">展开手牌</button></div>`;
   }
 

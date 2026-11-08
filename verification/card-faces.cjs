@@ -57,6 +57,16 @@ async function run() {
       await imageMask.evaluate(element => element.remove());
       if (!await samePixels(page, raised, clean)) failures.push(`${width}px：选中7张抬牌时，原始牌面图案露入角标区`);
       else checks.push(`${width}px：选中7张抬牌，角标区无原始图案重影`);
+      const lastCard = page.locator('.hand-fan [data-card]').last();
+      const bounds = await lastCard.boundingBox();
+      const viewport = page.viewportSize();
+      const clip = { x: bounds.x, y: bounds.y, width: Math.min(bounds.width, viewport.width - bounds.x), height: Math.min(bounds.height, viewport.height - bounds.y) };
+      const lastActual = await page.screenshot({ clip, animations: 'disabled' });
+      const lastMask = await page.addStyleTag({ content: '.hand-fan .card-art{visibility:hidden!important}' });
+      const lastClean = await page.screenshot({ clip, animations: 'disabled' });
+      await lastMask.evaluate(element => element.remove());
+      if (!await samePixels(page, lastActual, lastClean)) failures.push(`${width}px：末张手牌仍使用原图，角标大小和花色数量不一致`);
+      else checks.push(`${width}px：末张与其他手牌使用相同角标，无原图花色混入`);
       await page.screenshot({ path: path.join(output, `selected-cards-${width}.png`) });
       for (const [scene, count] of [['bid', 25], ['bury', 33]]) {
         await page.goto(`${pathToFileURL(artifact).href}?review=${scene}`);

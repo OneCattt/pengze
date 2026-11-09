@@ -20,20 +20,21 @@
 - 规则依据：`彭泽三打一_完整规则与Figma原型需求_V1.md`，文件内容版本V1.2。
 - 原型依据：[Figma · 彭泽三打一](https://www.figma.com/design/dROznof43d5cVxGKNj5vxM/Untitled?node-id=2-7486)。
 - 已读取起始、叫分、定主、扣底、首攻、超时、规则、结算等节点的设计上下文，并按原型缩放关系还原844×390牌桌。
-- 延续原型的绿色渐变、细金边、四方座位、中央徽记、底部牌扇、金色主按钮、深绿操作条及结算面板。
+- 规则流程仍依据原型；牌局视觉采用用户确认的江景茶室、三位人物和木边绿桌，替代旧版纯色渐变牌桌，保留四方座位、底部牌扇和阶段操作。
 - 使用内嵌的Noto Serif SC、Noto Sans SC，不依赖临时Figma资产链接或在线字体。
 
 ## 界面视觉调整
 
-- 在原有绿金配色上增加轻量桌布纹理、细边框与中央徽记，首页标题使用金色字效。
-- 底牌、发牌及扣底动画的牌背统一为菱格纹和“彭”字徽记；座位、庄家标识与结算印章同步调整。
-- 以上装饰由样式绘制，文字和交互仍可编辑；传统牌面继续使用已有素材。当前为HTML原型，微信小游戏适配及真机视觉仍待验证。
+- 首页显示茶室背景；实际牌局显示三位电脑牌友及木边绿桌。五张场景图约312KB，构建后全部内嵌，牌局刷新复用同一组场景节点。
+- 牌面、手牌数量、底牌、庄家、当前行动者、叫分、20秒计时及结算由真实游戏数据驱动，保留取消托管、退出本局和展开手牌。
+- 手牌整体上移，在844×390画板中完整显示25/33张牌；选中抬牌与操作区分离，出牌、收底和扣底动画使用新布局坐标。
+- 样式在 `src/scene.css`，素材和指纹在 `assets/scene/`。素材来源及重新生成方法见该目录README。微信小游戏适配及真机视觉仍待验证。
 
 ## 传统扑克牌面升级
 
 采用 [Public Domain and CC0 Playing Cards](https://github.com/AustinGabriel/Public-Domain-and-CC0-Playing-Cards) 的完整54种传统牌面：52张普通牌、黑色小王和红色大王。固定来源版本、CC0许可、原始SVG及图片指纹保存在 `assets/cards/`。
 
-- 按原始5:7比例导出240×336 WebP，总计约521KB，相比原始SVG减少约91.5%。构建后的独立HTML约1.12MB。
+- 按原始5:7比例导出240×336 WebP，总计约521KB，相比原始SVG减少约91.5%。接入茶室场景后，构建后的独立HTML约1.55MB。
 - 所有手牌统一使用独立的大点数、花色和大小王角标，末张也采用相同展示；展开手牌、出牌、扣底翻面及结算底牌直接显示原始图片。两种展示互斥，完整图片上不再叠加自绘角标。
 - 手牌角标采用内嵌Noto Sans的等高、等宽数字，替代Georgia的高低错落数字字形；“2”和“8”等数字顶线及基线保持一致。
 - 选中时抬起并显示金边，选中7张等组合也不会露出重复图案。展开区域支持完整查看33张牌；原有绿色“彭”字牌背继续保留。
@@ -76,8 +77,10 @@
 |---|---|
 | `verification/results/rules-report.json` | 规则检查、规则文档SHA256及250局AI模拟 |
 | `verification/results/browser-report.json` | 实际HTML产物SHA256、浏览器交互与真实20秒超时检查 |
-| `verification/results/visual-report.json` | 与Figma截图六处无遮挡桌布采样的颜色对照 |
-| `verification/results/figma-vs-html.png` | Figma叫分画面与HTML叫分画面的并排对照 |
+| `verification/results/scene-report.json` | 当前产物的场景内嵌、三种宽度七个阶段、手牌与控件分离及场景复用检查 |
+| `verification/results/scene-*.png` | 茶室实际牌局、四家出牌、33张展开和结算截图 |
+| `verification/results/visual-report.json` | 25/33张手牌角标无图案重影检查；旧Figma颜色仅作历史对照 |
+| `verification/results/figma-vs-html.png` | 原Figma布局与当前HTML的历史对照，不要求新场景与旧桌布同色 |
 | `verification/results/card-upgrade-comparison.png` | 牌面升级前后的小屏33张展开手牌对照 |
 | `verification/results/card-corner-fixes.png` | 第一轮局部修复历史对照，已被拆分渲染方案替代 |
 | `verification/results/full-face-report.json` | 三种宽度的抬牌、末张手牌及25/33张展开区原图对照，共12项回归 |
@@ -98,14 +101,18 @@
 | `src/style.css` | 基于Figma的牌桌样式 |
 | `src/rules.js` | 牌组、明确规则、记分、状态机与AI |
 | `src/app.js` | 页面、计时、动画、交互及独立演示场景 |
+| `src/scene.css` | 用户确认的江景茶室、人物、牌桌及真实牌局布局 |
 | `assets/*.woff2` | 内嵌字体源文件 |
 | `assets/cards/` | CC0原始牌面、优化图片、许可与来源清单 |
+| `assets/scene/` | 用户提供的茶室、牌桌、人物的运行时WebP和来源指纹 |
 | `build.cjs` | 将源码和字体构建为可独立打开的HTML |
 | `verification/check.cjs` | 无额外依赖的规则检查和AI完整牌局验证 |
 | `verification/browser.cjs` | Playwright浏览器行为与截图验证 |
 | `verification/card-faces.cjs` | 复现并回归抬牌图案重影、展开牌面被附加角标遮挡的问题 |
 | `verification/controls.cjs` | 等高数字、取消托管及退出后的旧计时/动画回调失效验证 |
-| `verification/visual.py` | Figma桌布颜色对照与并排图 |
+| `verification/scene.cjs` | 场景图层、三种宽度七个阶段与手牌交互检查 |
+| `verification/visual.py` | 手牌角标重影检查与旧Figma历史并排图 |
+| `verification/prepare-scene.cjs` | 使用独立预览中已保存的素材生成运行时WebP，需要Sharp |
 | `verification/prepare-fonts.py` | 根据界面所需字符获取设计字体子集，内容变化需要新字形时使用 |
 | `verification/prepare-cards.cjs` | 固定上游版本，获取SVG并用Sharp生成WebP，仅素材再生成时需要 |
 
@@ -122,6 +129,7 @@ node verification/check.cjs
 node verification/browser.cjs
 node verification/card-faces.cjs
 node verification/controls.cjs
+node verification/scene.cjs
 python3 verification/visual.py
 ```
 

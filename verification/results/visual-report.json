@@ -12,11 +12,11 @@
         55
       ],
       "html": [
-        10,
-        76,
-        56
+        149,
+        104,
+        86
       ],
-      "maxChannelDifference": 3
+      "maxChannelDifference": 142
     },
     {
       "position": [
@@ -29,11 +29,11 @@
         63
       ],
       "html": [
-        13,
-        89,
-        64
+        68,
+        41,
+        26
       ],
-      "maxChannelDifference": 4
+      "maxChannelDifference": 59
     },
     {
       "position": [
@@ -46,11 +46,11 @@
         67
       ],
       "html": [
-        12,
-        93,
-        68
+        32,
+        69,
+        61
       ],
-      "maxChannelDifference": 2
+      "maxChannelDifference": 23
     },
     {
       "position": [
@@ -63,11 +63,11 @@
         68
       ],
       "html": [
-        13,
-        94,
-        68
+        31,
+        67,
+        56
       ],
-      "maxChannelDifference": 2
+      "maxChannelDifference": 26
     },
     {
       "position": [
@@ -80,11 +80,11 @@
         51
       ],
       "html": [
-        8,
-        68,
-        52
+        255,
+        255,
+        255
       ],
-      "maxChannelDifference": 3
+      "maxChannelDifference": 250
     },
     {
       "position": [
@@ -97,11 +97,11 @@
         52
       ],
       "html": [
-        5,
-        67,
-        51
+        255,
+        255,
+        255
       ],
-      "maxChannelDifference": 1
+      "maxChannelDifference": 249
     }
   ],
   "handCornerChecks": [
@@ -116,5 +116,5 @@
       "status": "passed"
     }
   ],
-  "scope": "核对六处桌布颜色及25/33张重叠手牌角标栏的多余图案；布局、字体和适配另行看图检查，不代表整页像素一致。"
+  "scope": "用户确认的江景茶室素材已替代旧Figma纯色桌布，采样与并排图仅作历史对照，不再要求桌布同色；保留25/33张手牌无图案重影检查，新场景布局和素材验证见scene-report.json。"
 }

@@ -14,11 +14,18 @@ const faces = Object.fromEntries(Object.entries(manifest.cards).map(([key, card]
 for (const card of require('./src/rules.js').deck()) {
   if (!faces[`${card.suit}${card.rank}`]) throw new Error(`缺少牌面素材：${card.suit}${card.rank}`);
 }
+const sceneRoot = path.join(root, 'assets', 'scene');
+const sceneManifest = JSON.parse(fs.readFileSync(path.join(sceneRoot, 'manifest.json'), 'utf8'));
+const scene = Object.entries(sceneManifest.images).map(([name, image]) => {
+  const source = `data:image/webp;base64,${fs.readFileSync(path.join(sceneRoot, image.file)).toString('base64')}`;
+  return `<img class="scene-image scene-${name}" src="${source}" width="${image.width}" height="${image.height}" alt="" draggable="false">`;
+}).join('');
 const output = read('src/page.html')
   .replace('__FONTS__', fonts)
-  .replace('__STYLE__', read('src/style.css'))
+  .replace('__STYLE__', read('src/style.css') + '\n' + read('src/scene.css'))
   .replace('__RULES__', read('src/rules.js'))
   .replace('__CARD_ART__', JSON.stringify(faces))
+  .replace('__SCENE_IMAGES__', scene)
   .replace('__APP__', read('src/app.js'));
 fs.writeFileSync(path.join(root, '彭泽三打一_原型验证.html'), output);
 console.log(`已生成单文件HTML：${Buffer.byteLength(output)}字节`);

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>彭泽三打一 · 素材叠图预览</title>
+  <style>
+    @font-face{font-family:Pengze Sans;src:url("assets/sans.woff2")}@font-face{font-family:Pengze Serif;src:url("assets/serif.woff2")}
+    *{box-sizing:border-box}body{margin:0;background:#141a18;color:#efe5c9;font-family:Pengze Sans,"PingFang SC",sans-serif}button{font:inherit;cursor:pointer}button:focus-visible{outline:2px solid #ffe0a0;outline-offset:3px}
+    .viewport{height:100dvh;width:100vw;display:flex;align-items:center;justify-content:center;overflow:hidden}.board{position:relative;width:844px;height:390px;flex-shrink:0;overflow:hidden;transform-origin:center;background:#284436;isolation:isolate}
+    .room{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.shade{position:absolute;inset:0;background:linear-gradient(#0d1a172b,transparent 35%,#081c1717)}
+    .person{position:absolute;object-fit:contain;filter:drop-shadow(0 2px 2px #091c1830)}.person-left{left:5px;top:66px;width:151px;height:222px}.person-top{left:350px;top:28px;width:180px;height:166px}.person-right{right:0;top:64px;width:174px;height:195px}
+    .table{position:absolute;left:-3px;top:129px;width:850px;height:257px;filter:drop-shadow(0 4px 4px #14211966)}
+    .game-ui{position:absolute;inset:0}.brand{position:absolute;top:8px;left:12px;margin:0;padding:5px 10px;color:#f8d38c;font:700 16px Pengze Serif,"Songti SC",serif;background:#33291ec9;border:1px solid #bd925c;border-radius:4px;box-shadow:0 2px 7px #10191244}
+    .summary{position:absolute;top:6px;left:245px;padding:6px 16px;background:linear-gradient(#314b4df0,#183c3af0);border:1px solid #c5a36c;border-radius:16px;display:flex;gap:15px;align-items:center;color:#f2ead5;font-size:11px;box-shadow:0 2px 6px #14241c44}.summary b{color:#f6d596;font-weight:600}.summary span+span{border-left:1px solid #d8c69a50;padding-left:15px}
+    .identity{position:absolute;min-width:69px;padding:5px 8px;color:#fff6e3;background:linear-gradient(135deg,#28494deb,#203c3beb);border:1px solid #d3b879;border-radius:8px;box-shadow:0 2px 6px #10231e44;font-size:11px;text-align:center}.identity small{display:block;margin-top:2px;color:#e7d8b5;font-size:10px}.identity-left{left:8px;top:174px}.identity-top{left:486px;top:63px}.identity-right{right:9px;top:174px}.identity-self{left:14px;bottom:12px}.identity-self strong{font-family:Pengze Serif;font-size:15px}
+    .bottom{position:absolute;left:585px;top:174px;width:135px;text-align:center;color:#f3deb2;font-size:10px;text-shadow:0 1px 3px #0a2e21}.pile{display:flex;justify-content:center;margin-top:5px;padding-right:15px}.back{width:22px;height:31px;margin-right:-8px;display:grid;place-items:center;border:1px solid #e0d9c3;border-radius:2px;background:repeating-linear-gradient(45deg,transparent 0 3px,#dfd8bb27 3px 4px),#385a7e;box-shadow:inset 0 0 0 2px #4c7196,inset 0 0 0 3px #c7c9bc55;color:#e8dfc4;font-family:Pengze Serif;font-size:12px}
+    .bid-title{position:absolute;top:235px;left:332px;width:180px;text-align:center;color:#f5dfab;font:700 14px Pengze Serif;text-shadow:0 1px 3px #022e23}.bid-title:before,.bid-title:after{content:"";position:absolute;top:50%;width:40px;height:1px;background:linear-gradient(90deg,transparent,#d0b779)}.bid-title:before{left:0}.bid-title:after{right:0;transform:rotate(180deg)}
+    .controls{position:absolute;left:250px;top:259px;display:flex;gap:9px;align-items:center}.timer{height:34px;width:34px;display:grid;place-items:center;border:3px solid #e2bf69;border-radius:50%;color:#fff1cd;background:#203e35;box-shadow:0 2px 6px #11271d66;font:700 16px Georgia,serif}.action{height:33px;min-width:71px;border-radius:17px;border:1px solid #d9c599;background:linear-gradient(#eee9d7,#b2b6aa);color:#244036;box-shadow:inset 0 1px 0 #fff9,0 3px 0 #233d2f88;font-size:13px;font-weight:700}.primary{min-width:115px;background:linear-gradient(#ffe6a1,#d4a24e);border-color:#ffe7a4;color:#593816}.value{display:flex;align-items:center;gap:8px;color:#f8e3b8}.value b{font:700 22px Georgia,serif}.step{color:#e4c781;font-size:20px;line-height:25px}
+    .hand{position:absolute;left:103px;top:304px;height:82px;width:644px}.card{position:absolute;width:56px;height:78.4px;border:1px solid #c9c4b4;border-radius:4px;background:linear-gradient(100deg,#fffef9,#ecebe5);color:#17201e;box-shadow:-1px 1px 2px #172c2344;padding:3px 0 0 4px;font-family:Pengze Sans,sans-serif;line-height:22px;font-size:20px;font-weight:700}.card.double-rank{font-size:16px}.card .suit{display:block;font-family:Georgia,serif;font-size:18px;line-height:18px}.card.red{color:#bd272a}
+    .review-tools{position:fixed;right:12px;top:8px;display:flex;gap:6px;z-index:10}.review-tools button{border:1px solid #a8b0a655;color:#f0e8ce;background:#1a2e28d9;border-radius:4px;padding:5px 9px;font-size:11px}.review-tools button[aria-pressed="true"]{border-color:#d2b673;color:#ffe4a5}.board.clean .game-ui{display:none}
+  </style>
+</head>
+<body>
+  <main class="viewport" aria-label="独立视觉预览，非可玩牌局">
+    <div class="board" id="board">
+      <img class="room" src="assets/room.webp" alt="江边茶室背景">
+      <div class="shade"></div>
+      <img class="person person-left" src="assets/player-left.webp" alt="左侧女性牌友">
+      <img class="person person-top" src="assets/player-top.webp" alt="上方年轻男性牌友">
+      <img class="person person-right" src="assets/player-right.webp" alt="右侧戴眼镜男性牌友">
+      <img class="table" src="assets/table.webp" alt="绿色木边牌桌">
+      <section class="game-ui" aria-label="叫分阶段的排版示意">
+        <h1 class="brand">彭泽三打一</h1>
+        <div class="summary"><span>第 <b>1</b> 局</span><span>目标 <b>—</b></span><span>主牌 <b>—</b></span></div>
+        <div class="identity identity-left">电脑一<small>手牌 25张</small></div>
+        <div class="identity identity-top">电脑二<small>手牌 25张</small></div>
+        <div class="identity identity-right">电脑三<small>手牌 25张</small></div>
+        <div class="identity identity-self"><strong>我</strong><small>手牌 25张</small></div>
+        <div class="bottom">底牌 · 8张<div class="pile" id="pile"></div></div>
+        <div class="bid-title">请叫分</div>
+        <div class="controls"><span class="timer" aria-label="20秒倒计时示意">20</span><span class="action" style="display:grid;place-items:center">不叫</span><span class="value"><span class="step">−</span><b>80</b><span class="step">＋</span></span><span class="action primary" style="display:grid;place-items:center">叫80分</span></div>
+        <div class="hand" id="hand" aria-label="25张手牌排版示意"></div>
+      </section>
+    </div>
+  </main>
+  <nav class="review-tools" aria-label="预览显示"><button type="button" id="game" aria-pressed="true">牌局排版</button><button type="button" id="clean" aria-pressed="false">纯素材叠图</button></nav>
+  <script>
+    const board = document.getElementById('board');
+    const gameButton = document.getElementById('game');
+    const cleanButton = document.getElementById('clean');
+    const cards = [['2','♠'],['2','♥'],['A','♠'],['A','♥'],['K','♠'],['K','♥'],['Q','♣'],['Q','♦'],['J','♠'],['J','♥'],['10','♣'],['10','♦'],['9','♠'],['9','♥'],['8','♣'],['8','♦'],['7','♠'],['7','♥'],['6','♣'],['6','♦'],['5','♠'],['5','♥'],['4','♣'],['4','♦'],['3','♠']];
+    document.getElementById('hand').innerHTML = cards.map(([rank, suit], index) => `<div class="card ${suit === '♥' || suit === '♦' ? 'red' : ''} ${rank === '10' ? 'double-rank' : ''}" style="left:${index * 24.5}px" aria-label="${suit}${rank}">${rank}<span class="suit">${suit}</span></div>`).join('');
+    document.getElementById('pile').innerHTML = Array.from({length:8}, () => '<span class="back">彭</span>').join('');
+    function resize() { board.style.transform = `scale(${Math.min(innerWidth / 844, innerHeight / 390)})`; }
+    function setClean(clean) {board.classList.toggle('clean', clean);gameButton.setAttribute('aria-pressed', String(!clean));cleanButton.setAttribute('aria-pressed', String(clean));}
+    gameButton.addEventListener('click', () => setClean(false));
+    cleanButton.addEventListener('click', () => setClean(true));
+    addEventListener('resize', resize);
+    resize();
+  </script>
+</body>
+</html>

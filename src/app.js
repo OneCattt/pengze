@@ -10,7 +10,8 @@
   const params = new URLSearchParams(location.search);
   const names = ['我', '电脑一', '电脑二', '电脑三'];
   const initials = ['我', '一', '二', '三'];
-  const centers = [{ x: 37, y: 352 }, { x: 40, y: 180 }, { x: 403, y: 73 }, { x: 804, y: 180 }];
+  const centers = [{ x: 40, y: 351 }, { x: 45, y: 195 }, { x: 524, y: 85 }, { x: 799, y: 195 }];
+  const bottomOrigin = { x: 600, y: 139, step: 9 };
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let game = new Rules.Game();
   let selected = new Set();
@@ -90,7 +91,7 @@
   function renderHeader() {
     const effective = game.dealer === null ? '—' : game.actual - game.penalty;
     const target = game.highest || '—';
-    return `<header class="table-header"><button class="brand" style="background:none;padding:0" data-action="menu" aria-label="彭泽三打一，验证场景">彭泽三打一</button><button class="score-summary" data-action="score">第${game.round}局 目标 <b>${target}</b> 主 <b>${Rules.SUIT_SYMBOLS[game.trump] || '—'}</b> 有效 <b>${effective}</b></button><div class="header-actions">${game.managed ? '<button class="managed-badge" data-action="resume">取消托管</button>' : ''}<button class="text-button" data-action="exit">退出本局</button><button class="text-button" data-action="rules">规则</button><span class="capsule" aria-label="微信胶囊预留区域">···</span></div></header>`;
+    return `<header class="table-header"><button class="brand" data-action="menu" aria-label="彭泽三打一，验证场景">彭泽三打一</button><button class="score-summary" data-action="score">第${game.round}局 目标 <b>${target}</b> 主 <b>${Rules.SUIT_SYMBOLS[game.trump] || '—'}</b> 有效 <b>${effective}</b></button><div class="header-actions">${game.managed ? '<button class="managed-badge" data-action="resume">取消托管</button>' : ''}<button class="text-button" data-action="exit">退出本局</button><button class="text-button" data-action="rules">规则</button><span class="capsule" aria-label="微信胶囊预留区域">···</span></div></header>`;
   }
 
   function renderSeat(player) {
@@ -107,7 +108,7 @@
   function renderBottom() {
     const count = game.phase === 'burying' ? 0 : game.bottom.length;
     if (!count) return '';
-    return `<div class="bottom-pile" aria-label="底牌${count}张，牌面保密">${Array.from({ length: count }, () => '<span class="card-back"></span>').join('')}<span class="pile-count">${count}张</span></div>`;
+    return `<div class="bottom-pile" style="left:${bottomOrigin.x}px;top:${bottomOrigin.y}px" aria-label="底牌${count}张，牌面保密">${Array.from({ length: count }, () => '<span class="card-back"></span>').join('')}<span class="pile-count">${count}张</span></div>`;
   }
 
   function handCards() {
@@ -172,7 +173,7 @@
   function render() {
     board.classList.toggle('home-board', game.phase === 'home');
     if (game.phase === 'home') surface.innerHTML = renderHome();
-    else surface.innerHTML = `<div class="table-line"></div>${renderHeader()}<div class="table-emblem"><b>彭</b><span>三打一</span></div>${[0, 1, 2, 3].map(renderSeat).join('')}${renderBottom()}${renderHand()}${renderTrick()}${game.phase === 'dealing' ? '<div class="deal-stock"></div>' : ''}${renderControls()}`;
+    else surface.innerHTML = `${renderHeader()}${[0, 1, 2, 3].map(renderSeat).join('')}${renderBottom()}${renderHand()}${renderTrick()}${game.phase === 'dealing' ? '<div class="deal-stock"></div>' : ''}${renderControls()}`;
     renderOverlay();
   }
 
@@ -271,7 +272,7 @@
 
   async function animateBury(cards, positions, human) {
     await Promise.all(cards.map(async (card, index) => {
-      if (!human) return fly({ x: centers[game.dealer].x, y: centers[game.dealer].y }, { x: 632 + index * 9, y: 109 }, null, index * 65);
+      if (!human) return fly({ x: centers[game.dealer].x, y: centers[game.dealer].y }, { x: bottomOrigin.x + index * bottomOrigin.step, y: bottomOrigin.y }, null, index * 65);
       const element = document.createElement('div');
       element.className = 'bury-card';
       const from = positions[index];
@@ -282,7 +283,7 @@
       await animateElement(element, [
         { transform: 'perspective(700px) translate(0,0) rotateY(0deg) scale(1)', offset: 0 },
         { transform: 'perspective(700px) translate(0,-12px) rotateY(180deg) scale(1)', offset: .48 },
-        { transform: `perspective(700px) translate(${632 + index * 9 - from.x}px,${109 - from.y}px) rotateY(180deg) scale(.52)`, offset: 1 }
+        { transform: `perspective(700px) translate(${bottomOrigin.x + index * bottomOrigin.step - from.x}px,${bottomOrigin.y - from.y}px) rotateY(180deg) scale(.52)`, offset: 1 }
       ], { duration: duration(650), delay: duration(index * 65), easing: 'cubic-bezier(.25,.65,.3,1)', fill: 'both' });
       element.remove();
     }));
@@ -322,7 +323,7 @@
 
   async function runPickup(currentGeneration) {
     const player = game.dealer;
-    await Promise.all(Array.from({ length: 8 }, (_, index) => fly({ x: 632 + index * 9, y: 109 }, { x: centers[player].x - 18, y: centers[player].y - 26 }, null, index * 55)));
+    await Promise.all(Array.from({ length: 8 }, (_, index) => fly({ x: bottomOrigin.x + index * bottomOrigin.step, y: bottomOrigin.y }, { x: centers[player].x - 18, y: centers[player].y - 26 }, null, index * 55)));
     if (generation !== currentGeneration) return;
     record('庄家收底完成', { dealer: player, count: game.hands[player].length });
     game.finishPickup();
@@ -424,10 +425,13 @@
       record('甩牌失败', { player, count: result.failedCount, punishment });
     }
     const zone = surface.querySelector(`[data-played-seat="${player}"]`);
-    const rect = zone.getBoundingClientRect();
     const tableRect = board.getBoundingClientRect();
+    const destinations = Array.from(zone.querySelectorAll('.poker-card'), element => {
+      const rect = element.getBoundingClientRect();
+      return { x: (rect.left - tableRect.left) / scale, y: (rect.top - tableRect.top) / scale };
+    });
     zone.style.visibility = 'hidden';
-    await Promise.all(result.cards.map((card, index) => fly(player === 0 ? positions.get(card.id) : { x: centers[player].x - 18, y: centers[player].y - 26 }, { x: (rect.left - tableRect.left) / scale + index * 23, y: (rect.top - tableRect.top) / scale }, card, index * 30)));
+    await Promise.all(result.cards.map((card, index) => fly(player === 0 ? positions.get(card.id) : { x: centers[player].x - 18, y: centers[player].y - 26 }, destinations[index], card, index * 30)));
     if (generation !== currentGeneration) return;
     actionInProgress = false;
     record('出牌', { player, cards: result.cards.map(card => card.id), handCount: game.hands[player].length });

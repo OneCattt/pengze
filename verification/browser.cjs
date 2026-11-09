@@ -160,7 +160,7 @@ async function run() {
     await page.setViewportSize({ width: 844, height: 390 });
     await page.goto(`${url}?speed=fast`);
     await page.locator('[data-action="start"]').click();
-    await page.waitForFunction(() => window.PengzeValidation.game.phase === 'bidding' && window.PengzeValidation.game.actor === 0);
+    await page.waitForFunction(() => window.PengzeValidation.game.phase === 'bidding' && window.PengzeValidation.game.actor === 0 && window.PengzeValidation.timerCount === 1 && document.querySelectorAll('.hand-fan .poker-card').length === 25);
     assert.equal(await page.locator('.hand-fan .poker-card').count(), 25);
     assert.equal(await page.evaluate(() => window.PengzeValidation.timerCount), 1);
     const originalDeadline = await page.evaluate(() => window.PengzeValidation.deadline);
@@ -216,7 +216,7 @@ async function run() {
     assert.deepEqual(externalRequests, []);
     checks.push('无浏览器运行错误，无外部运行依赖请求');
     const artifact = fs.readFileSync(path.join(root, '彭泽三打一_原型验证.html'));
-    const report = { date: '2026-11-08', artifactSha256: crypto.createHash('sha256').update(artifact).digest('hex'), figma: { fileKey: 'dROznof43d5cVxGKNj5vxM', nodeId: '2:7486' }, passed: checks.length, checks, errors, externalRequests, boundary: '本地Chromium与file协议验证；非微信真机验收，复杂混合甩牌仍以文档边界为准。' };
+    const report = { date: '2026-11-09', artifactSha256: crypto.createHash('sha256').update(artifact).digest('hex'), figma: { fileKey: 'dROznof43d5cVxGKNj5vxM', nodeId: '2:7486' }, passed: checks.length, checks, errors, externalRequests, boundary: '本地Chromium与file协议验证；非微信真机验收，复杂混合甩牌仍以文档边界为准。' };
     fs.writeFileSync(path.join(output, 'browser-report.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report, null, 2));
   } finally {

@@ -1,0 +1,22 @@
+{
+  "type": "design",
+  "designSystems": [],
+  "primaryDesignSystem": null,
+  "assets": {
+    "茶室牌桌素材叠图": {
+      "versions": [
+        {
+          "path": "index.html",
+          "createdAt": "2026-11-09T02:07:16.468Z",
+          "status": "needs-review",
+          "viewport": {
+            "width": 844,
+            "height": 390
+          }
+        }
+      ]
+    }
+  },
+  "createdAt": "2026-11-09T02:07:16.471Z",
+  "updatedAt": "2026-11-09T02:07:16.471Z"
+}

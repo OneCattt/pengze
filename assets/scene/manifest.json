@@ -1,0 +1,50 @@
+{
+  "source": "用户提供的五张茶室和人物素材",
+  "images": {
+    "room": {
+      "file": "room.webp",
+      "width": 1688,
+      "height": 780,
+      "bytes": 152148,
+      "sha256": "1dc9b4eb03fbd0c6519e061ce16c9ef3ba77afa1336b3cc801ed7ccf075ac168",
+      "source": "designs/tea-room-layer-review/source/room.png",
+      "sourceSha256": "5c49dc3e57a0a7e057c584e9fc12498ddad6a766aca17b8cde37158a166c4fc2"
+    },
+    "table": {
+      "file": "table.webp",
+      "width": 1700,
+      "height": 514,
+      "bytes": 82864,
+      "sha256": "7e0176ac5d71ed963555eb20eb4b7529cfe8bf25bfd8326130f523287375c934",
+      "source": "designs/tea-room-layer-review/source/table.png",
+      "sourceSha256": "a65a8fbae7e6218a84862d630966fa3ed3c08bc21e3ee07159b17875967f3ab4"
+    },
+    "player-left": {
+      "file": "player-left.webp",
+      "width": 302,
+      "height": 444,
+      "bytes": 32554,
+      "sha256": "36b9d1c6c9362d90461f97ee1afa5e9a3c7f65ac47a515ce25e9aa1938ca1817",
+      "source": "designs/tea-room-layer-review/source/player-left.png",
+      "sourceSha256": "b8f17e6ce39832103f17532085d7e4612bf647b0a63aa4979b2be98a118ed721"
+    },
+    "player-top": {
+      "file": "player-top.webp",
+      "width": 360,
+      "height": 332,
+      "bytes": 23908,
+      "sha256": "e2711cbc1a84e07700d4095dec37ffe2bda17b23169d62a1ea3a6505ff3ad9ad",
+      "source": "designs/tea-room-layer-review/source/player-top.png",
+      "sourceSha256": "d6dcd9e65d063f0636bd3e96c5c9ecf1a3b93b92ff296b2e705b879227b04516"
+    },
+    "player-right": {
+      "file": "player-right.webp",
+      "width": 348,
+      "height": 390,
+      "bytes": 27846,
+      "sha256": "45f55bca1722d136e1ce877f0824705769fd38a36232d4e811dbbda888720d33",
+      "source": "designs/tea-room-layer-review/source/player-right.png",
+      "sourceSha256": "3d4158cef85d7c9ba453fa786fc7dc858d4ebd60d852a34732e41ae50f016e67"
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "player-left": {
+    "source": "source/player-left.png",
+    "sourceSize": [
+      1199,
+      1312
+    ],
+    "sourceSha256": "b8f17e6ce39832103f17532085d7e4612bf647b0a63aa4979b2be98a118ed721",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "crop": [
+      116,
+      70,
+      941,
+      1284
+    ],
+    "previewSize": [
+      825,
+      1214
+    ],
+    "preview": "assets/player-left.webp"
+  },
+  "player-right": {
+    "source": "source/player-right.png",
+    "sourceSize": [
+      1402,
+      1122
+    ],
+    "sourceSha256": "3d4158cef85d7c9ba453fa786fc7dc858d4ebd60d852a34732e41ae50f016e67",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "crop": [
+      258,
+      27,
+      1231,
+      1118
+    ],
+    "previewSize": [
+      973,
+      1091
+    ],
+    "preview": "assets/player-right.webp"
+  },
+  "player-top": {
+    "source": "source/player-top.png",
+    "sourceSize": [
+      1402,
+      1122
+    ],
+    "sourceSha256": "d6dcd9e65d063f0636bd3e96c5c9ecf1a3b93b92ff296b2e705b879227b04516",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "crop": [
+      145,
+      51,
+      1294,
+      1106
+    ],
+    "previewSize": [
+      1149,
+      1055
+    ],
+    "preview": "assets/player-top.webp"
+  },
+  "table": {
+    "source": "source/table.png",
+    "sourceSize": [
+      1846,
+      852
+    ],
+    "sourceSha256": "a65a8fbae7e6218a84862d630966fa3ed3c08bc21e3ee07159b17875967f3ab4",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "crop": [
+      17,
+      144,
+      1829,
+      806
+    ],
+    "previewSize": [
+      1812,
+      662
+    ],
+    "preview": "assets/table.webp"
+  },
+  "room": {
+    "source": "source/room.png",
+    "sourceSize": [
+      1847,
+      851
+    ],
+    "sourceSha256": "5c49dc3e57a0a7e057c584e9fc12498ddad6a766aca17b8cde37158a166c4fc2",
+    "alphaRange": null,
+    "crop": null,
+    "previewSize": [
+      1847,
+      851
+    ],
+    "preview": "assets/room.webp"
+  }
+}

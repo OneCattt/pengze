@@ -1,0 +1,63 @@
+.scene-layer{position:absolute;inset:0;z-index:0;pointer-events:none;user-select:none;overflow:hidden}
+.scene-image{position:absolute;display:block}
+.scene-room{inset:0;width:100%;height:100%;object-fit:cover}
+.scene-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(#10251b26,transparent 36%,#071c1814)}
+.scene-player-left,.scene-player-top,.scene-player-right{z-index:2;object-fit:contain;filter:drop-shadow(0 2px 2px #091c1830)}
+.scene-player-left{left:5px;top:66px;width:151px;height:222px}
+.scene-player-top{left:350px;top:28px;width:180px;height:166px}
+.scene-player-right{right:0;top:64px;width:174px;height:195px}
+.scene-table{left:-3px;top:129px;z-index:3;width:850px;height:257px;filter:drop-shadow(0 4px 4px #14211966)}
+#surface{z-index:1}
+.board:after{box-shadow:inset 0 0 44px #00140e32}
+.home-board .scene-player-left,.home-board .scene-player-top,.home-board .scene-player-right,.home-board .scene-table{display:none}
+.home-board .scene-shade{background:radial-gradient(ellipse at center,#082b2370,#061c16c9)}
+.home-rings{display:none}
+.home-content:before{content:'';position:absolute;inset:-20px -25px -10px;z-index:-1;border:1px solid #d4bc783b;border-radius:12px;background:#092b23db;box-shadow:0 10px 35px #061b1566}
+.home-links{color:#c2c7b1}
+.table-header{height:44px;padding:0 14px;background:linear-gradient(#132b2670,transparent)}
+.table-header .brand{padding:5px 9px;border:1px solid #c29a61;border-radius:5px;background:#372b20d9;color:#f3d392;font-size:15px;box-shadow:0 2px 6px #14241b44}
+.score-summary{left:365px;padding:5px 12px;border:1px solid #c7a66c;border-radius:17px;background:linear-gradient(#304c4de8,#173d3be8);color:#eee8d6;font-size:10px;box-shadow:0 2px 6px #14241b44}
+.score-summary b{font-size:14px;color:#f6dca5}
+.header-actions{gap:9px}
+.header-actions .text-button{color:#fff3d7;text-shadow:0 1px 3px #10291e}
+.capsule{background:#17302b99;border-color:#e5d4ab50;color:#fff4dc}
+.seat{min-width:73px;min-height:43px;padding:5px 8px;border:1px solid #c5ab71;border-radius:8px;background:linear-gradient(135deg,#294b4deb,#203c3beb);box-shadow:0 2px 6px #10231e44;color:#fff4db}
+.seat-0{left:12px;top:338px;gap:4px;min-width:80px;min-height:38px;padding:4px}
+.seat-1{left:8px;top:174px}
+.seat-2{left:486px;top:63px}
+.seat-3{right:9px;top:174px}
+.seat:not(.seat-0){gap:0;justify-content:center;text-align:center}
+.seat-name{font-size:11px;line-height:17px}
+.seat-count{font-size:9px;line-height:13px;color:#ecdfbf}
+.seat:not(.seat-0) .avatar{position:static;width:0;height:0;min-width:0;border:0;background:none;box-shadow:none;font-size:0;text-shadow:none}
+.seat-0 .avatar{position:static;width:25px;height:25px;border:0;background:none;box-shadow:none;font-size:16px}
+.seat-0 .seat-name{display:none}
+.seat.active{border-color:#ffe19a;box-shadow:0 0 0 1px #e4bd6d88,0 2px 10px #0b261b66}
+.dealer-badge{right:-7px;top:-7px;bottom:auto;font-size:10px}
+.seat-action{top:47px;left:3px;padding:2px 5px;border-radius:3px;background:#12382ee8;font-size:9px;color:#f6dfad;text-shadow:none}
+.seat-3 .seat-action{right:3px}
+.seat-0 .seat-action{top:-22px}
+.bottom-pile:before{color:#f2dfae;font-size:9px;text-shadow:0 1px 3px #082d20}
+.pile-count{color:#f2dfae;font-size:9px;text-shadow:0 1px 3px #082d20}
+.hand-zone{top:310px;height:74px}
+.hand-tools{bottom:48px;right:13px}
+.hand-tools button{font-size:9px;color:#f1dfb6;background:#173d33e8;border-color:#d2b37599}
+.controls{top:241px;min-height:48.5px;background:linear-gradient(#23493ef2,#102f27f2);border-color:#c3a46b88;border-radius:9px;box-shadow:0 3px 10px #10281e66}
+.controls .button{border-radius:17px;background:linear-gradient(#e6e5d7,#aab6a8);border-color:#eee0b7;color:#284137;font-size:11px;font-weight:700;box-shadow:0 2px 0 #102c2280}
+.controls .button.primary{background:linear-gradient(#ffe5a0,#d2a04c);border-color:#ffe6a6;color:#593b1e}
+.controls .suit-button{font-size:21px}
+.controls .suit-button.red{color:#b92930}
+.control-info small,.bid-stepper span{color:#c7cfb9}
+.control-info strong{color:#f4dfb0}
+.countdown{background:#1b3c32;color:#ffebbc;font-size:14px}
+.bid-stepper button{color:#e9d196}
+.center-status{top:251px;padding:6px 13px;border:1px solid #c8ad6d66;border-radius:5px;background:#173b30ed;color:#f4dfb0}
+.play-zone-0{top:188px}
+.play-zone-1{left:145px;top:197px}
+.play-zone-2{top:132px}
+.play-zone-3{right:145px;top:197px}
+.trick-caption{color:#ffedbf;text-shadow:0 1px 3px #0d3526}
+.modal-layer{background:#031c1559}
+.panel{border-color:#c6a56e99;background:linear-gradient(135deg,#234a3d,#0b3027);box-shadow:0 12px 35px #071e1677}
+.result-panel .result-actions{gap:10px}
+.result-panel .text-button{color:#c5d4bd}
